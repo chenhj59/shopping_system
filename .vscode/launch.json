@@ -3,6 +3,20 @@
     "configurations": [
       {
         "type": "java",
+        "name": "Sqlite",
+        "request": "launch",
+        "mainClass": "org.example.Sqlite",
+        "projectName": "Template-Java-Projects-with-Maven"
+      },
+      {
+        "type": "java",
+        "name": "Shoppingsystem",
+        "request": "launch",
+        "mainClass": "org.example.Shoppingsystem",
+        "projectName": "Template-Java-Projects-with-Maven"
+      },
+      {
+        "type": "java",
         "name": "Debug (Launch)",
         "request": "launch",
         "mainClass": "org.example.Main",
