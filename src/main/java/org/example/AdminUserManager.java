@@ -61,6 +61,7 @@ public class AdminUserManager {
                 System.out.print("名字：" + resultSet.getString(4) + " ");
                 System.out.print("年龄：" + resultSet.getString(5) + " ");
                 System.out.print("性别" + resultSet.getString(6) + " ");
+                System.out.println();
             }
             return true;
         } catch(SQLException e){
