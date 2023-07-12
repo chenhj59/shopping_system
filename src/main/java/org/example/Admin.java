@@ -1,5 +1,4 @@
 package org.example;
-private List<Product> shoppingCart;
 
 public class Admin {
     private String username;
