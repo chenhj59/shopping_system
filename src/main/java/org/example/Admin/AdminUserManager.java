@@ -1,7 +1,10 @@
-package org.example;
+package org.example.Admin;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.example.User.User;
+
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;

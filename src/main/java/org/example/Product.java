@@ -1,54 +1,89 @@
 package org.example;
 
 public class Product {
-    private String name;
-    private double price;
-    private int inventory;
-    private int quantitySold;
-    private int quantity;
+    private int productID;
+    private String productName;
+    private String productManufacturer;
+    private String productDateOfManufacture;
+    private String productModel;
+    private double productPurchasePrice;
+    private double productRetailPrice;
+    private int productInventory;       // 库存
 
-    public String getName() {
-        return name;
+    public Product(){
+
     }
 
-    public double getPrice() {
-        return price;
+    public Product(int ID, String name, String manu, String date, String model, double purPrice, double retPrice, int inventory){
+        this.productID = ID;
+        this.productManufacturer = manu;
+        this.productDateOfManufacture = date;
+        this.productModel = model;
+        this.productPurchasePrice = purPrice;
+        this.productRetailPrice = retPrice;
+        this.productInventory = inventory;
+    }
+    public int getID() {
+        return productID;
+    }
+
+    public String getName() {
+        return productName;
+    }
+
+    public String getManufacturer() {
+        return productManufacturer;
+    }
+
+    public String getDateOfManufacture() {
+        return productDateOfManufacture;
+    }
+
+    public String getModel(){
+        return productModel;
+    }
+
+    public double getPurcPrice() {
+        return productPurchasePrice;
+    }
+
+    public double getRetailPrice() {
+        return productRetailPrice;
     }
 
     public int getInventory() {
-        return inventory;
+        return productInventory;
     }
 
-    public int getQuantitySold() {
-        return quantitySold;
+    public void setID(int ID) {
+        this.productID = ID;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public void setName(String name) {
+        this.productName = name;
     }
 
-    public void setName(String name)
-    {
-        this.name = name;
+    public void setManufacturer(String manu) {
+        this.productManufacturer = manu;
     }
 
-    public void setPrice(double price)
-    {
-        this.price = price;
+    public void setDateOfManufacture(String date) {
+        this.productDateOfManufacture = date;
     }
 
-    public void setInventory(int inventory)
-    {
-        this.inventory = inventory;
+    public void setModel(String model){
+        this.productModel = model;
     }
 
-    public void setQunatitySold(int quantitySold)
-    {
-        this.quantitySold = quantitySold;
+    public void setPurcPrice(double price) {
+        this.productPurchasePrice = price;
     }
 
-    public void setQunatity(int quantitySold)
-    {
-        this.quantity = quantity;
+    public void setRetailPrice(double price) {
+        this.productRetailPrice = price;
+    }
+
+    public void setInventory(int inventory) {
+        this.productInventory = inventory;
     }
 }

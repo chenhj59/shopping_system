@@ -1,6 +1,9 @@
-package org.example;
+package org.example.User;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.example.Product;
+
 import java.sql.*;
 public class UserShoppingAction {
     private static final String DB_URL = "jdbc:sqlite:users.db";
@@ -33,7 +36,7 @@ public class UserShoppingAction {
         product = searchProduct(product.getName());
         try{
             Connection conn = DriverManager.getConnection(DB_URL);
-            PreparedStatement prep = conn.prepareStatement("INSERT INTO usersShoppingCart (username, productName, productPrice, productInventory, productQuantitySold, purchaseQuantity) values (?, ?, ?, ?, ?, ?)");
+            PreparedStatement prep = conn.prepareStatement("INSERT INTO usersShoppingCart (username, productPrice, productQuantitySold) values (?, ?, ?)");
             prep.setString(1, username);
             prep.setString(2, product.getName());
             prep.setDouble(3, product.getPrice());

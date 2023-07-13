@@ -1,9 +1,13 @@
-package org.example;
+package org.example.User;
 import java.sql.*;
+import java.util.ArrayList;
 
-public class UserDatebaseInitializer {
+import org.example.DatebaseInitializer;
+
+public class UserDatebaseInitializer implements DatebaseInitializer{
 	private static final String DB_URL = "jdbc:sqlite:users.db";
 
+    @Override
     public void initializeDatabase() {
         try {
             Class.forName("org.sqlite.JDBC");
@@ -27,5 +31,14 @@ public class UserDatebaseInitializer {
         } catch(ClassNotFoundException e){
             System.out.println("加载JDBC失败: " + e.getMessage());
         }
+    }
+
+    public void readUsers(ArrayList<User> users)
+    {
+        System.out.print(users);
+    }
+
+    public void writeUsers(ArrayList<User> users){
+        System.out.print("a");
     }
 }

@@ -1,9 +1,8 @@
-package org.example;
+package org.example.Admin;
 
-public class Admin {
-    private String username;
-    private String password;
+import org.example.Account;
 
+public class Admin extends Account{
     public boolean login(String username, String password) {
         // 验证管理员用户名和密码的正确性
         if ("admin".equals(username) && "admin123".equals(password)) {
@@ -12,7 +11,15 @@ public class Admin {
         return false; // 登录失败返回false
     }
 
-    public void changePassword(String newPassword) {
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUserName(String username) {
+        this.username = username;
+    }
+
+    public void changePassword(String username, String newPassword) {
         // 实现密码管理逻辑，修改管理员密码
         this.password = newPassword;
     }

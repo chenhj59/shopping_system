@@ -1,12 +1,17 @@
-package org.example;
+package org.example.User;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.example.Account;
+
 import java.sql.*;
 
-public class User {
+public class User extends Account{
     private static final String DB_URL = "jdbc:sqlite:usersAccount.db";
-    private String username;
-    private String password;
+    private int userID;
+    private String userLevel;
+    private String userPhongNumber;
+    private String userEmail;
 
     User()
     {
