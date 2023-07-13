@@ -17,6 +17,7 @@ public class MainShoppingSystem {
         AdminUserManager adminUserManager = new AdminUserManager();
         AdminProductManager adminProductManager = new AdminProductManager();
 
+        Product product = new Product();
         Scanner scanner = new Scanner(System.in);
         int isReturn = 0; //是否返回上一级
         String role = "";
@@ -65,13 +66,13 @@ public class MainShoppingSystem {
                                                 break;
                                             case "2":
                                                 System.out.print("请给出要删除客户的用户名：");
-                                                String delete_name = scanner.nextLine();
-                                                adminUserManager.deleteCustomer(delete_name);
+                                                String deleteName = scanner.nextLine();
+                                                adminUserManager.deleteCustomer(deleteName);
                                                 break;
                                             case "3":
                                                 System.out.print("请给出要搜索客户的用户名：");
-                                                String search_name = scanner.nextLine();
-                                                adminUserManager.searchCustomer(search_name);
+                                                String searchName = scanner.nextLine();
+                                                adminUserManager.searchCustomer(searchName);
                                                 break;
                                             case "q":
                                                 isReturn = 1;
@@ -88,7 +89,59 @@ public class MainShoppingSystem {
                                         }
                                         break;
                                     case "2":
-                                        
+                                    while(true){
+                                        System.out.println("请选择操作：");
+                                        System.out.println("1. 列出所有商品信息");
+                                        System.out.println("2. 添加商品信息");
+                                        System.out.println("3. 修改商品信息");
+                                        System.out.println("4. 删除商品信息");
+                                        System.out.println("5. 查询商品信息");
+                                        System.out.print("当前为管理员管理商品界面，若返回上一级请按q >");
+                                        choice = scanner.nextLine();
+                                        switch(choice){
+                                            case "1":
+                                            adminProductManager.listAllProducts("1");
+                                                break;
+                                            case "2":
+                                                System.out.print("请给出要添加的商品名：");
+                                                product.setName(scanner.nextLine());
+                                                System.out.print("请给出要添加的商品价格：");
+                                                product.setPrice(scanner.nextDouble());
+                                                System.out.print("请给出要添加的商品库存：");
+                                                product.setInventory(scanner.nextInt());
+                                                System.out.print("请给出要添加的商品已售数量：");
+                                                product.setQunatitySold(scanner.nextInt());
+                                                scanner.nextLine();  //吸收回车键
+                                                adminProductManager.addProduct(product);
+                                                break;
+                                            case "3":
+                                                System.out.print("请给出要修改的商品名：");
+                                                String aimName = scanner.nextLine();
+                                                adminProductManager.searchProduct(aimName);
+                                                break;
+                                            case "4":
+                                                System.out.print("请给出要删除的商品名：");
+                                                String deleteName = scanner.nextLine();
+                                                adminProductManager.deleteProduct(deleteName);
+                                                break;
+                                            case "5":
+                                                System.out.print("请给出要查询的商品名：");
+                                                String searchName = scanner.nextLine();
+                                                adminProductManager.searchProduct(searchName);
+                                                break;
+                                            case "q":
+                                                isReturn = 1;
+                                                break;
+                                            default:
+                                                System.out.println("无效的选择！");
+                                                break;
+                                            }
+                                            if(isReturn == 1)
+                                            {
+                                                isReturn = 0;
+                                                break;
+                                            }
+                                        }                                       
                                         break;
                                     case "3":
                                         System.out.print("当前为管理员修改密码界面，若返回上一级请按q，否则按任意键继续 >");
@@ -179,7 +232,56 @@ public class MainShoppingSystem {
             
                                         switch (choice) {
                                             case "1":
-                                                
+                                            while(true){
+                                                System.out.println("请选择操作：");
+                                                System.out.println("1. 将商品加入购物车");
+                                                System.out.println("2. 从购物车移除商品");
+                                                System.out.println("3. 修改购物车中商品");
+                                                System.out.println("4. 结账");
+                                                System.out.println("5. 查看购物记录");
+                                                System.out.print("当前为购物界面，若返回上一级请按q >");
+                                                choice = scanner.nextLine();
+                                                switch(choice){
+                                                    case "1":
+                                                        System.out.print("请给出要添加的商品名：");
+                                                        product.setName(scanner.nextLine());    
+                                                        System.out.print("请给出你需要购买数量：");
+                                                        product.setQunatity(scanner.nextInt());  
+                                                        scanner.nextLine();                                                  
+                                                        userShoppingAction.addItem(username, product);;
+                                                        break;
+                                                    case "2":
+                                                        System.out.print("请给出要移除的商品名：");
+                                                        product.setName(scanner.nextLine());
+                                                        userShoppingAction.removeItem(product);
+                                                        break;
+                                                    case "3":
+                                                        System.out.print("请给出要修改的商品名：");
+                                                        product.setName(scanner.nextLine());
+                                                        System.out.print("请给出你需要购买数量：");
+                                                        product.setQunatity(scanner.nextInt());
+                                                        scanner.nextLine();
+                                                        userShoppingAction.updateQuantity(product);
+                                                        break;
+                                                    case "4":
+                                                        userShoppingAction.checkout(username);
+                                                        break;
+                                                    case "5":
+                                                        userShoppingAction.viewShoppingHistory(username);
+                                                        break;
+                                                    case "q":
+                                                        isReturn = 1;
+                                                        break;
+                                                    default:
+                                                        System.out.println("无效的选择！");
+                                                        break;
+                                                    }
+                                                    if(isReturn == 1)
+                                                    {
+                                                        isReturn = 0;
+                                                        break;
+                                                    }
+                                                }        
                                                 break;
                                             case "2":
                                                 System.out.print("当前为用户修改密码界面，若返回上一级请按q，否则按任意键继续 >");

@@ -8,7 +8,7 @@ public class ProductDatebaseInitializer {
             Class.forName("org.sqlite.JDBC");
             Connection connection = DriverManager.getConnection(DB_URL);
             Statement statement = connection.createStatement();
-            String createTableQuery = "CREATE TABLE IF NOT EXISTS Users (id INTEGER PRIMARY KEY AUTOINCREMENT, productName TEXT, price TEXT)";
+            String createTableQuery = "CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT, productName TEXT, price double, inventory int, quantitySold int)";
             statement.executeUpdate(createTableQuery);
             System.out.println("Database initialized successfully!");
         } catch (SQLException e) {

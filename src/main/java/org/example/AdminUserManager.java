@@ -12,7 +12,6 @@ import java.sql.SQLException;
 public class AdminUserManager {
     private List<User> customers;
     private static final String DB_URL = "jdbc:sqlite:usersAccount.db";
-    private static final String UF_URL = "jdbc:sqlite:usersInfo.db";
 
     public void listAllCustomers(String position){
         try(Connection connection = DriverManager.getConnection(DB_URL)){
