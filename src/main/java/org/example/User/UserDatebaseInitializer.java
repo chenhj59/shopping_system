@@ -1,7 +1,4 @@
 package org.example.User;
-import org.example.CartItem;
-import org.example.PurchaseItem;
-
 import java.sql.*;
 import java.util.ArrayList;
 

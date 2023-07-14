@@ -1,4 +1,4 @@
-package org.example;
+package org.example.User;
 
 public class PurchaseItem extends CartItem{
     private String time;

@@ -1,8 +1,4 @@
 package org.example.User;
-import org.example.CartItem;
-import org.example.PurchaseItem;
-
-import java.util.stream.Collectors;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,18 +7,11 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 import org.example.Product.Product;
-import org.example.Product.ProductQueryParams;
 
-import java.sql.*;
 public class UserShoppingAction {
-    private static final String DB_URL = "jdbc:sqlite:users.db";
-    private List<Product> products = new ArrayList<Product>();
     private double sum = 0.0;
-    private int quantity = 0;
 
     public Product searchProduct(ArrayList<Product> products, Product product) {
-        List<Product> results = new ArrayList<Product>();
-
         for(Product pro : products){
             if(pro.getID() == product.getID()){
                 return pro;
@@ -57,6 +46,10 @@ public class UserShoppingAction {
 
     public void updateQuantity(ArrayList<CartItem> cartItems, Product product, int quantity) {
         int idx = 0;
+        if(quantity <= 0){
+            removeItem(cartItems, product);
+            return;
+        }
         for(CartItem cartItem : cartItems){
             if(cartItem.getName().equals(product.getName())){
                 cartItem.setQunatity(quantity);

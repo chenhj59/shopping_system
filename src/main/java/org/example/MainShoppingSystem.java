@@ -15,6 +15,8 @@ import org.example.Admin.AdminUserManager;
 import org.example.Product.Product;
 import org.example.Product.ProductDatebaseInitializer;
 import org.example.Product.ProductQueryParams;
+import org.example.User.CartItem;
+import org.example.User.PurchaseItem;
 import org.example.User.User;
 import org.example.User.UserDatebaseInitializer;
 import org.example.User.UserQueryParams;
@@ -49,13 +51,12 @@ public class MainShoppingSystem {
         Scanner scanner = new Scanner(System.in);
 
         int isReturn = 0; //是否返回上一级
+        int flag = 0; //判断数字是否输入格式正确
+        int quantity = 0;
         String role = "";
         String choice = "";
-        int exit = 0;
         while(true){
-            if(exit == 1){
-                break;
-            }
+            System.out.println("想要终止程序，请输入exit");
             System.out.println("请选择角色：管理员（A）或用户（U）");
             role = scanner.nextLine();
             while(true){
@@ -67,6 +68,8 @@ public class MainShoppingSystem {
                     if(choice.equals("q"))
                     {
                         break;
+                    }else if(choice.equals("exit")){
+                        isExit(productDateInitializer, userDatebaseInitializer, products, users, cartItems, purchaseItems);
                     }
                     System.out.println("请输入管理员用户名：");
                     adminname = scanner.nextLine();
@@ -102,15 +105,24 @@ public class MainShoppingSystem {
                                                 adminUserManager.deleteCustomer(users, deleteName);
                                                 break;
                                             case "3":
-                                                System.out.println("请给出要搜索客户的ID：");
-                                                userQueryParams.setID(scanner.nextInt());
-                                                scanner.nextLine();
+                                                while(true){
+                                                    try{
+                                                        System.out.println("请给出要搜索客户的ID：");
+                                                        userQueryParams.setID(Integer.valueOf(scanner.nextLine()));
+                                                        break;
+                                                    }catch (NumberFormatException e) {
+                                                        System.out.println("输入无效，请输入一个有效的数字。");
+                                                    }
+                                                } 
                                                 System.out.print("请给出要搜索客户的用户名：");
                                                 userQueryParams.setName(scanner.nextLine());
                                                 adminUserManager.searchCustomer(users, userQueryParams);
                                                 break;
                                             case "q":
                                                 isReturn = 1;
+                                                break;
+                                            case "exit":
+                                                isExit(productDateInitializer, userDatebaseInitializer, products, users, cartItems, purchaseItems);
                                                 break;
                                             default:
                                                 System.out.println("无效的选择！");
@@ -139,9 +151,15 @@ public class MainShoppingSystem {
                                                 break;
                                             case "2":
                                                 Product pro = new Product();
-                                                System.out.print("请给出要添加的商品编号：");
-                                                pro.setID(scanner.nextInt());
-                                                scanner.nextLine();
+                                                while(true){
+                                                    try{
+                                                        System.out.print("请给出要添加的商品编号：");
+                                                        pro.setID(Integer.valueOf(scanner.nextLine())); 
+                                                        break;
+                                                    }catch (NumberFormatException e) {
+                                                        System.out.println("输入无效，请输入一个有效的数字。");
+                                                    }
+                                                } 
                                                 System.out.print("请给出要添加的商品名称：");
                                                 pro.setName(scanner.nextLine());
                                                 System.out.print("请给出要添加的商品得生产厂家：");
@@ -150,21 +168,45 @@ public class MainShoppingSystem {
                                                 pro.setDateOfManufacture(scanner.nextLine());
                                                 System.out.print("请给出要添加的商品的型号：");
                                                 pro.setModel(scanner.nextLine());
-                                                System.out.print("请给出要添加的商品的进货价格：");
-                                                pro.setPurcPrice(scanner.nextDouble());
-                                                scanner.nextLine();
-                                                System.out.print("请给出要添加的商品的零售价格：");
-                                                pro.setRetailPrice(scanner.nextDouble());
-                                                scanner.nextLine();
-                                                System.out.print("请给出要添加的商品的数量：");
-                                                pro.setInventory(scanner.nextInt());
-                                                scanner.nextLine();  //吸收回车键
+                                                while(true){
+                                                    System.out.print("请给出要添加的商品的进货价格：");                                      
+                                                    try {
+                                                        pro.setPurcPrice(Double.parseDouble(scanner.nextLine()));
+                                                        break;
+                                                    } catch (NumberFormatException e) {
+                                                        System.out.println("输入无效，请输入一个有效的数字。");
+                                                    }
+                                                }
+                                                while(true){
+                                                    System.out.print("请给出要添加的商品的零售价格：");                                    
+                                                    try {
+                                                        pro.setRetailPrice(Double.parseDouble(scanner.nextLine()));
+                                                        break;
+                                                    } catch (NumberFormatException e) {
+                                                        System.out.println("输入无效，请输入一个有效的数字。");
+                                                    }
+                                                }
+                                                while(true){
+                                                    try{
+                                                        System.out.print("请给出要添加的商品的数量：");
+                                                        pro.setInventory(Integer.valueOf(scanner.nextLine()));
+                                                        break;
+                                                    }catch (NumberFormatException e) {
+                                                        System.out.println("输入无效，请输入一个有效的数字。");
+                                                    }
+                                                } 
                                                 adminProductManager.addProduct(products, pro);
                                                 break;
                                             case "3":
-                                            System.out.print("请给出要修改的商品编号：");
-                                            product.setID(scanner.nextInt());
-                                            scanner.nextLine();
+                                            while(true){
+                                                try{
+                                                    System.out.print("请给出要修改的商品编号：");
+                                                    product.setID(Integer.valueOf(scanner.nextLine())); 
+                                                    break;
+                                                }catch (NumberFormatException e) {
+                                                    System.out.println("输入无效，请输入一个有效的数字。");
+                                                }
+                                            } 
                                             System.out.print("请给出要修改的商品名称：");
                                             product.setName(scanner.nextLine());
                                             System.out.print("请给出要修改的商品得生产厂家：");
@@ -173,15 +215,34 @@ public class MainShoppingSystem {
                                             product.setDateOfManufacture(scanner.nextLine());
                                             System.out.print("请给出要修改的商品的型号：");
                                             product.setModel(scanner.nextLine());
-                                            System.out.print("请给出要修改的商品的进货价格：");
-                                            product.setPurcPrice(scanner.nextDouble());
-                                            scanner.nextLine();
-                                            System.out.print("请给出要修改的商品的零售价格：");
-                                            product.setRetailPrice(scanner.nextDouble());
-                                            scanner.nextLine();
-                                            System.out.print("请给出要修改的商品的数量：");
-                                            product.setInventory(scanner.nextInt());
-                                            scanner.nextLine();  //吸收回车键
+                                            while(true){
+                                                System.out.print("请给出要修改的商品的进货价格：");
+                                                try {
+                                                    product.setPurcPrice(Double.parseDouble(scanner.nextLine()));
+                                                    break;
+                                                } catch (NumberFormatException e) {
+                                                    System.out.println("输入无效，请输入一个有效的数字。");
+                                                }
+                                            }
+                                            while(true){
+                                                System.out.print("请给出要修改的商品的零售价格：");
+                                                try {
+                                                    product.setRetailPrice(Double.parseDouble(scanner.nextLine()));
+                                                    break;
+                                                } catch (NumberFormatException e) {
+                                                    System.out.println("输入无效，请输入一个有效的数字。");
+                                                }
+                                            }
+                                            while(true){
+                                                try{
+                                                    System.out.print("请给出要修改的商品的数量：");
+                                                    product.setInventory(Integer.valueOf(scanner.nextLine()));
+                                                    break;
+                                                }catch (NumberFormatException e) {
+                                                    System.out.println("输入无效，请输入一个有效的数字。");
+                                                }
+                                            } 
+                                            
                                                 adminProductManager.updateProduct(products, product);
                                                 break;
                                             case "4":
@@ -194,13 +255,22 @@ public class MainShoppingSystem {
                                                 queryParams.setName(scanner.nextLine());
                                                 System.out.print("请给出要查询的商品的生产厂家：");
                                                 queryParams.setManu(scanner.nextLine());
-                                                System.out.print("请给出要查询的商品的零售价格：");
-                                                queryParams.setRetPrice(scanner.nextDouble());
-                                                scanner.nextLine();
+                                                while(true){
+                                                    System.out.print("请给出要查询的商品的零售价格：");
+                                                    try {
+                                                        queryParams.setRetPrice(Double.parseDouble(scanner.nextLine()));
+                                                        break;
+                                                    } catch (NumberFormatException e) {
+                                                        System.out.println("输入无效，请输入一个有效的数字。");
+                                                    }
+                                                }
                                                 adminProductManager.searchProduct(products, queryParams);
                                                 break;
                                             case "q":
                                                 isReturn = 1;
+                                                break;
+                                            case "exit":
+                                                isExit(productDateInitializer, userDatebaseInitializer, products, users, cartItems, purchaseItems);
                                                 break;
                                             default:
                                                 System.out.println("无效的选择！");
@@ -219,6 +289,8 @@ public class MainShoppingSystem {
                                         if(choice.equals("q"))
                                         {
                                             break;
+                                        }else if(choice.equals("exit")){
+                                            isExit(productDateInitializer, userDatebaseInitializer, products, users, cartItems, purchaseItems);
                                         }
                                         System.out.println("请输入新密码：");
                                         String newPassword = scanner.nextLine();
@@ -230,6 +302,9 @@ public class MainShoppingSystem {
                                         break;
                                     case "q":
                                         isReturn = 1;
+                                        break;
+                                    case "exit":
+                                        isExit(productDateInitializer, userDatebaseInitializer, products, users, cartItems, purchaseItems);
                                         break;
                                     default:
                                         System.out.println("无效的选择！");
@@ -253,6 +328,8 @@ public class MainShoppingSystem {
                     if(choice.equals("q"))
                     {
                         break;
+                    }else if(choice.equals("exit")){
+                        isExit(productDateInitializer, userDatebaseInitializer, products, users, cartItems, purchaseItems);
                     }
                     String password="";
                     String username="";              
@@ -291,6 +368,8 @@ public class MainShoppingSystem {
                                 if(choice.equals("q"))
                                 {
                                     break;
+                                }else if(choice.equals("exit")){
+                                    isExit(productDateInitializer, userDatebaseInitializer, products, users, cartItems, purchaseItems);
                                 }
                                 System.out.println("请输入用户名：");
                                 username = scanner.nextLine();
@@ -318,12 +397,24 @@ public class MainShoppingSystem {
                                                 choice = scanner.nextLine();
                                                 switch(choice){
                                                     case "1":
-                                                        System.out.print("请给出要添加的商品编号：");
-                                                        product.setID(scanner.nextInt());   
-                                                        scanner.nextLine(); 
-                                                        System.out.print("请给出你需要购买数量：");
-                                                        int quantity = scanner.nextInt();  
-                                                        scanner.nextLine();       
+                                                        while(true){
+                                                            try{
+                                                                System.out.print("请给出要添加的商品编号：");
+                                                                product.setID(Integer.valueOf(scanner.nextLine())); 
+                                                                break;
+                                                            }catch (NumberFormatException e) {
+                                                                System.out.println("输入无效，请输入一个有效的数字。");
+                                                            }
+                                                        } 
+                                                        while(true){
+                                                            try{
+                                                                System.out.print("请给出你需要购买数量：");
+                                                                quantity = Integer.valueOf(scanner.nextLine()); 
+                                                                break;
+                                                            }catch (NumberFormatException e) {
+                                                                System.out.println("输入无效，请输入一个有效的数字。");
+                                                            }
+                                                        } 
                                                         product = userShoppingAction.searchProduct(products, product); 
                                                         if(product != null){
                                                             userShoppingAction.addItem(cartItems, user.getID(), product, quantity);
@@ -339,9 +430,15 @@ public class MainShoppingSystem {
                                                     case "3":
                                                         System.out.print("请给出要修改的商品名：");
                                                         product.setName(scanner.nextLine());
-                                                        System.out.print("请给出你需要购买数量：");
-                                                        quantity = scanner.nextInt();
-                                                        scanner.nextLine();
+                                                        while(true){
+                                                            try{
+                                                                System.out.print("请给出你需要购买数量：");
+                                                                quantity = Integer.valueOf(scanner.nextLine());
+                                                                break;
+                                                            }catch (NumberFormatException e) {
+                                                                System.out.println("输入无效，请输入一个有效的数字。");
+                                                            }
+                                                        } 
                                                         userShoppingAction.updateQuantity(cartItems, product, quantity);
                                                         break;
                                                     case "4":
@@ -352,6 +449,9 @@ public class MainShoppingSystem {
                                                         break;
                                                     case "q":
                                                         isReturn = 1;
+                                                        break;
+                                                    case "exit":
+                                                        isExit(productDateInitializer, userDatebaseInitializer, products, users, cartItems, purchaseItems);
                                                         break;
                                                     default:
                                                         System.out.println("无效的选择！");
@@ -382,6 +482,9 @@ public class MainShoppingSystem {
                                             case "q":
                                                 isReturn = 1;
                                                 break;
+                                            case "exit":
+                                                isExit(productDateInitializer, userDatebaseInitializer, products, users, cartItems, purchaseItems);
+                                                break;
                                             default:
                                                 System.out.println("无效的选择！");
                                                 break;
@@ -409,7 +512,9 @@ public class MainShoppingSystem {
                             break;
                         }  
                     }
-                } else {
+                } else if(role.equals("exit")){
+                    isExit(productDateInitializer, userDatebaseInitializer, products, users, cartItems, purchaseItems);
+                }else {
                     System.out.println("无效的角色选择！");
                     break;
                 }
@@ -417,24 +522,11 @@ public class MainShoppingSystem {
             userDatebaseInitializer.write(users, cartItems, purchaseItems);
             productDateInitializer.write(products);
         }
+        
     }
-
-    private static void help() {
-        System.out.print("欢迎进入帮助子菜单");
-
-        Scanner scanner = new Scanner(System.in);
-        String userInput = "";
-
-        while(true) {
-            System.out.println("请输入你的指令,q 退出");
-            System.out.print("你当前在 help 的二级子目录下 >");
-            userInput = scanner.nextLine();
-
-            if (userInput.equals("q")) {
-                break;
-            }
-
-            System.out.println("其实吧，这个也就是做个样子给你看看，让你知道怎么做二级界面罢了");
-        }
+    public static void isExit(ProductDatebaseInitializer productDateInitializer, UserDatebaseInitializer userDatebaseInitializer, ArrayList<Product> products, ArrayList<User> users, ArrayList<CartItem> cartItems, ArrayList<PurchaseItem> purchaseItems){
+        userDatebaseInitializer.write(users, cartItems, purchaseItems);
+        productDateInitializer.write(products);
+        System.exit(-1);
     }
 }
