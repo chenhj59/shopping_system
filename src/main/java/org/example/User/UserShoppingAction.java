@@ -1,5 +1,6 @@
 package org.example.User;
 import org.example.CartItem;
+import org.example.PurchaseItem;
 
 import java.util.stream.Collectors;
 import java.util.Scanner;
@@ -43,13 +44,13 @@ public class UserShoppingAction {
     public boolean removeItem(ArrayList<CartItem> cartItems, Product product) {
         Scanner scanner = new Scanner(System.in);
         for(CartItem cartItem : cartItems){
-            if(cartItem.getUsername().equals(name)){                
+            if(cartItem.getName().equals(product.getName())){                
                 System.out.println("是否要删除用户信息，删除后将无法恢复，按y确定，按n取消：");
                 String flag = scanner.nextLine();
                 if(flag.equalsIgnoreCase("y")){
-                    cartItems.remove(user);
+                    cartItems.remove(cartItem);
                 }else if(flag.equalsIgnoreCase("n")){
-                    System.out.println("已经删除" + user.getUsername() + "！");
+                    System.out.println("已经删除" + cartItem.getName() + "！");
                 }else{
                     System.out.println("已经取消删除！");
                 }
@@ -62,67 +63,46 @@ public class UserShoppingAction {
     public void updateQuantity(Product product) {
     }
 
-    public void calculateTotalPrice(String username) {
-        ResultSet resultSet = null;
-        try(Connection connection = DriverManager.getConnection(DB_URL)){
-            PreparedStatement prep = connection.prepareStatement("SELECT * FROM usersShoppingCart WHERE username = ?");
-            prep.setString(1, username);
-            resultSet = prep.executeQuery();
-
-            while(resultSet.next()){
-                Product product = new Product();
-                product.setName(resultSet.getString(2));
-                product.setPrice(resultSet.getDouble(3));
-                product.setInventory(resultSet.getInt(4));
-                product.setQunatitySold(resultSet.getInt(5));
-                product.setQunatity(resultSet.getInt(6));
-                products.add(product);
-                sum += resultSet.getDouble(3);
+    public void calculateTotalPrice(ArrayList<CartItem> cartItems, ArrayList<CartItem> results, int userID) {
+        for(CartItem cartItem : cartItems){
+            if(cartItem.getID == userID){
+                sum += cartItem.getPurcPrice() * cartItem.getQuantity();
             }
-        } catch(SQLException e){
-            System.out.println("结算出错：" + e.getMessage());
         }
     }
 
-    public void checkout(String username) {
-        calculateTotalPrice(username);
-        addShoppingHistory();
-        System.out.println("共需支付" + sum + "元");
+    public void checkout(ArrayList<PurchaseItem> PurchaseItem, ArrayList<CartItem> cartItems, String username) {
+        ArrayList<CartItem> result = null;
+
+        calculateTotalPrice(cartItems, results, username);
+        System.out.println("共需支付" + sum + "元！");
+        System.out.println("已经通过微信支付" + sum + "元！");       
+        addShoppingHistory(ArrayList<PurchaseItem> PurchaseItem, result);
     }
 
-    public void addShoppingHistory() {
-        try{
-            Connection conn = DriverManager.getConnection(DB_URL);
-            PreparedStatement prep = conn.prepareStatement("INSERT INTO usersPurchaseRecode(username, productName, productPrice, purchaseQuantity, time) values (?, ?, ?, ?, ?)");
-            for(var product : products){
-                prep.setString(1, product.getName());
-                prep.setDouble(2, product.getPrice());
-                prep.setInt(3, product.getInventory());
-                prep.setInt(4, product.getQuantitySold());
-                prep.setInt(5, product.getQuantity());
-                prep.executeUpdate();
-            }
-        }catch (SQLException e) {
-            System.out.println("初始化数据库失败: " + e.getMessage());
+    public void addShoppingHistory(ArrayList<PurchaseItem> PurchaseItems, ArrayList<CartItem> results) {
+        Date currentDate = new Date();
+
+        // 创建 SimpleDateFormat 对象，并定义日期时间格式
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        // 使用 format() 方法将 Date 对象转换为字符串
+        String dateString = dateFormat.format(currentDate);
+        for(CartItem cartItem : results){
+            PurchaseItems.add(new PurchaseItem(results.getID(), results.getUserID(), results.getName(), results.getPurcPrice(), results.getQuantity(), currentDate))
         }
+
+
     }
 
-    public void viewShoppingHistory(String username) {
-        ResultSet resultSet = null;
-        try(Connection connection = DriverManager.getConnection(DB_URL)){
-            PreparedStatement prep = connection.prepareStatement("SELECT * FROM usersPurchaseRecode WHERE username = ?");
-            prep.setString(1, username);
-            resultSet = prep.executeQuery();
-
-            while(resultSet.next()){
-                System.out.print("商品名字：" + resultSet.getString(3) + " ");
-                System.out.print("商品价格：" + resultSet.getString(4) + " ");
-                System.out.print("购买数量：" + resultSet.getString(5) + " ");
-                System.out.print("购买时间：" + resultSet.getString(6) + " ");
-                System.out.println();
-            }
-        } catch(SQLException e){
-            System.out.println(e.getMessage());
+    public void viewShoppingHistory(ArrayList<PurchaseItem> PurchaseItems) {
+        for(PurchaseItem PurchaseItem : PurchaseItems){
+            System.out.print("商品编号：" + PurchaseItem.getID() + " ");
+            System.out.print("商品名称：" + PurchaseItem.getName() + " ");
+            System.out.print("商品价格：" + PurchaseItem.getPurcPrice() + " ");
+            System.out.print("购买数量：" + PurchaseItem.getQuantity() + " ");
+            System.out.print("购买时间：" + PurchaseItem.getTime() + " ");
+            System.out.println();
         }
     }
 }
