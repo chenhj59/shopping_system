@@ -15,7 +15,7 @@ public class User extends Account{
     public String userPhoneNumber = null;
     public String userEmail = null;
 
-    User()
+    public User()
     {
 
     }
@@ -36,50 +36,27 @@ public class User extends Account{
         this.userEmail = userEmail;
     }
 
-    public void register(String username, String password, String name, String age, String sex){
-        try{
-            Class.forName("org.sqlite.JDBC");
-            Connection conn = DriverManager.getConnection(DB_URL);
-            PreparedStatement prep = conn.prepareStatement("INSERT INTO usersAccount(username, password, name, age, sex) values (?, ?, ?, ?, ?)");
-            prep.setString(1, username);
-            prep.setString(2, password);
-            prep.setString(3, name);
-            prep.setString(4, age);
-            prep.setString(5, sex);
-            
-            prep.executeUpdate();
-            System.out.println("注册成功！");
-        }catch (SQLException e) {
-            System.out.println("初始化数据库失败: " + e.getMessage());
-        } catch(ClassNotFoundException e){
-            System.out.println("加载JDBC失败: " + e.getMessage());
-        }
+    public void register(ArrayList<User> users, String username, String password, String userLevel, String registerTime, double totalCost, String userPhoneNumber, String userEmail){
+        users.add(new User(users.size(), username, password, userLevel, registerTime, totalCost, userPhoneNumber, userEmail));
     }
 
     @Override
     public boolean login(String username, String password) {
-        ResultSet resultSet = null;
-        try(Connection connection = DriverManager.getConnection(DB_URL)){
-            PreparedStatement prep = connection.prepareStatement("SELECT * FROM usersAccount WHERE username = ?");
-            prep.setString(1, username);
-            resultSet = prep.executeQuery();
+        return true;
+        }
 
-            if(resultSet.next()){
-                if(resultSet.getString(2).equals(password)){
-                    System.out.println("登录成功！");
+    public boolean login(ArrayList<User> users, String username, String password) {
+        for(User user : users){
+            if(user.getUsername().equals(username)){
+                if(user.getPassword().equals(password)){
                     return true;
-                }
-                else{
-                    System.out.println("登录失败！");
+                }else{
                     return false;
                 }
             }
-            return false;
-        } catch(SQLException e){
-            System.out.println("初始化数据库失败: " + e.getMessage());
-            return false;
         }
-    }
+        return false;
+    } 
 
     public int getID(){
         return this.userID;

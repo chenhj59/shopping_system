@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
-import org.example.CartItem;
+import java.text.SimpleDateFormat;
+
 import org.example.Product.Product;
 import org.example.Product.ProductQueryParams;
 
@@ -18,7 +20,7 @@ public class UserShoppingAction {
     private double sum = 0.0;
     private int quantity = 0;
 
-    public Product searchProduct(ArrayList<Product> products, int ID,  int quantity) {
+    public Boolean searchProduct(ArrayList<Product> products, int ID,  int quantity) {
         List<Product> results = new ArrayList<Product>();
 
         
@@ -65,19 +67,19 @@ public class UserShoppingAction {
 
     public void calculateTotalPrice(ArrayList<CartItem> cartItems, ArrayList<CartItem> results, int userID) {
         for(CartItem cartItem : cartItems){
-            if(cartItem.getID == userID){
+            if(cartItem.getID() == userID){
                 sum += cartItem.getPurcPrice() * cartItem.getQuantity();
             }
         }
     }
 
-    public void checkout(ArrayList<PurchaseItem> PurchaseItem, ArrayList<CartItem> cartItems, String username) {
-        ArrayList<CartItem> result = null;
+    public void checkout(ArrayList<PurchaseItem> PurchaseItems, ArrayList<CartItem> cartItems, int userID) {
+        ArrayList<CartItem> results = null;
 
-        calculateTotalPrice(cartItems, results, username);
+        calculateTotalPrice(cartItems, results, userID);
         System.out.println("共需支付" + sum + "元！");
         System.out.println("已经通过微信支付" + sum + "元！");       
-        addShoppingHistory(ArrayList<PurchaseItem> PurchaseItem, result);
+        addShoppingHistory(PurchaseItems, results);
     }
 
     public void addShoppingHistory(ArrayList<PurchaseItem> PurchaseItems, ArrayList<CartItem> results) {
@@ -89,7 +91,7 @@ public class UserShoppingAction {
         // 使用 format() 方法将 Date 对象转换为字符串
         String dateString = dateFormat.format(currentDate);
         for(CartItem cartItem : results){
-            PurchaseItems.add(new PurchaseItem(results.getID(), results.getUserID(), results.getName(), results.getPurcPrice(), results.getQuantity(), currentDate))
+            PurchaseItems.add(new PurchaseItem(cartItem.getID(), cartItem.getUserID(), cartItem.getName(), cartItem.getPurcPrice(), cartItem.getQuantity(), dateString));
         }
 
 

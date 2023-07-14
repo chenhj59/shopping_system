@@ -41,6 +41,7 @@ public class MainShoppingSystem {
 
         CartItem cartItem = new CartItem();
 
+        User user = new User();
         UserQueryParams userQueryParams = new UserQueryParams();
         ProductQueryParams queryParams = new ProductQueryParams();
 
@@ -313,9 +314,9 @@ public class MainShoppingSystem {
                                                         System.out.print("请给出要添加的商品名：");
                                                         product.setName(scanner.nextLine());    
                                                         System.out.print("请给出你需要购买数量：");
-                                                        product.setQunatity(scanner.nextInt());  
+                                                        int quantity = scanner.nextInt();  
                                                         scanner.nextLine();                                                  
-                                                        userShoppingAction.addItem(username, product);;
+                                                        userShoppingAction.addItem(cartItems, userID, quantity);
                                                         break;
                                                     case "2":
                                                         System.out.print("请给出要移除的商品名：");
