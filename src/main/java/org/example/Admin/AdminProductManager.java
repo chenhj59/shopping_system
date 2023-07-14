@@ -2,9 +2,11 @@ package org.example.Admin;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.example.Product.Product;
+import org.example.Product.ProductQueryParams;
+
 import java.util.Scanner;
-import org.example.Product;
-import org.example.QueryParams;
 import java.sql.*;
 
 public class AdminProductManager {
@@ -60,7 +62,7 @@ public class AdminProductManager {
         return false;
     }
 
-    public boolean searchProduct(ArrayList<Product> products, QueryParams queryParams) {
+    public boolean searchProduct(ArrayList<Product> products, ProductQueryParams queryParams) {
         List<Product> results = new ArrayList<Product>();
 
         results = products.stream()

@@ -1,12 +1,12 @@
 package org.example;
 
 public abstract class Account {
-    protected String username;
-    protected String password;
+    public String username = null;
+    public String password = null;
 
     public abstract String getUsername();
 
-    public abstract void setUserName(String username);
+    public abstract void setUsername(String username);
 
     public abstract void changePassword(String username, String newPassword);
 

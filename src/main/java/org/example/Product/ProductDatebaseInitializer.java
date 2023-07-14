@@ -1,6 +1,8 @@
-package org.example;
+package org.example.Product;
 import java.sql.*;
 import java.util.ArrayList;
+
+import org.example.DatebaseInitializer;
 public class ProductDatebaseInitializer implements DatebaseInitializer{
     private static final String DB_URL = "jdbc:sqlite:products.db";
 
@@ -9,7 +11,15 @@ public class ProductDatebaseInitializer implements DatebaseInitializer{
             Class.forName("org.sqlite.JDBC");
             Connection connection = DriverManager.getConnection(DB_URL);
             Statement statement = connection.createStatement();
-            String createTableQuery = "CREATE TABLE IF NOT EXISTS products (ID int key, productID integer, productName TEXT, productManufacturer TEXT, productDateOfManufacture TEXT, productModel TEXT, productPurchasePrice double, productRetailPrice double, productInventory integer)";
+            String createTableQuery = "CREATE TABLE IF NOT EXISTS products" + 
+            "(productID INT products key NOT NULL," +
+            "productName TEXT NOT NULL,"+
+            "productManufacturer TEXT NOT NULL,"+
+            "productDateOfManufacture TEXT,"+
+            "productModel TEXT, "+
+            "productPurchasePrice double, "+
+            "productRetailPrice double, "+
+            "productInventory int)";
             statement.executeUpdate(createTableQuery);
             System.out.println("Database initialized successfully!");
         } catch (SQLException e) {
@@ -43,18 +53,19 @@ public class ProductDatebaseInitializer implements DatebaseInitializer{
             connection = DriverManager.getConnection(DB_URL);
 
             // 2. 创建 PreparedStatement 对象，并指定 SQL 语句
-            String sql = "INSERT INTO products (productName, productManufacturer, productDateOfManufacture, productModel , productPurchasePrice , productRetailPrice , productInventory) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO products (productID, productName, productManufacturer, productDateOfManufacture, productModel , productPurchasePrice , productRetailPrice , productInventory) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             statement = connection.prepareStatement(sql);
 
             // 3. 执行批量添加
             for (Product product : products) {
-                statement.setString(1, product.getName());
-                statement.setString(2, product.getManufacturer());
-                statement.setString(3, product.getDateOfManufacture());
-                statement.setString(4, product.getModel());
-                statement.setDouble(5, product.getPurcPrice());
-                statement.setDouble(6, product.getRetailPrice());
-                statement.setInt(7, product.getInventory());
+                statement.setInt(1, product.getID());
+                statement.setString(2, product.getName());
+                statement.setString(3, product.getManufacturer());
+                statement.setString(4, product.getDateOfManufacture());
+                statement.setString(5, product.getModel());
+                statement.setDouble(6, product.getPurcPrice());
+                statement.setDouble(7, product.getRetailPrice());
+                statement.setInt(8, product.getInventory());
                 statement.addBatch();
             }
             statement.executeBatch();

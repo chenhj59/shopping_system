@@ -1,14 +1,14 @@
-package org.example;
+package org.example.Product;
 
-public class Product {
-    private int productID;
-    private String productName;
-    private String productManufacturer;
-    private String productDateOfManufacture;
-    private String productModel;
-    private double productPurchasePrice;
+public class Product{
+    protected int productID;
+    protected String productName;
+    protected String productManufacturer;
+    protected String productDateOfManufacture;
+    protected String productModel;
+    protected double productPurchasePrice;
     private double productRetailPrice;
-    private int productInventory;       // 库存
+    protected int productInventory;       // 库存
 
     public Product(){
 
@@ -16,6 +16,7 @@ public class Product {
 
     public Product(int ID, String name, String manu, String date, String model, double purPrice, double retPrice, int inventory){
         this.productID = ID;
+        this.productName = name;
         this.productManufacturer = manu;
         this.productDateOfManufacture = date;
         this.productModel = model;

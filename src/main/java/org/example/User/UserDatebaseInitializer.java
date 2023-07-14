@@ -1,4 +1,7 @@
 package org.example.User;
+import org.example.CartItem;
+import org.example.PurchaseItem;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -15,15 +18,34 @@ public class UserDatebaseInitializer implements DatebaseInitializer{
             Statement statement = connection.createStatement();
             
             // 创建用户信息表
-            String createUserAccountTableQuery = "CREATE TABLE IF NOT EXISTS usersAccount (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, name TEXT, age TEXT, sex TEXT)";
+            String createUserAccountTableQuery = "CREATE TABLE IF NOT EXISTS usersAccount" + 
+            "(userID INT usersAccount key NOT NULL," +
+            "userName TEXT NOT NULL,"+
+            "password TEXT NOT NULL,"+
+            "userLevel TEXT,"+
+            "registerTime TEXT, "+
+            "totalCost double, "+
+            "userPhoneNumber String, "+
+            "userEmail String)";
             statement.executeUpdate(createUserAccountTableQuery);
 
             // 创建用户购物车表
-            String createUserShopCartTableQuery = "CREATE TABLE IF NOT EXISTS usersShoppingCart (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, productName TEXT, productPrice double, productInventory int, productQuantitySold int, purchaseQuantity int)";
+            String createUserShopCartTableQuery = "CREATE TABLE IF NOT EXISTS usersShoppingCart" + 
+            "(productID INT usersShoppingCart key NOT NULL," +
+            "userID INT NOT NULL"+
+            "productName TEXT NOT NULL,"+
+            "productPurchasePrice double, "+
+            "quantity int)";
             statement.executeUpdate(createUserShopCartTableQuery);
 
             // 创建用户购物记录表
-            String createUserPurchaseRecodeTableQuery = "CREATE TABLE IF NOT EXISTS usersPurchaseRecode (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, productName TEXT, productPrice double, purchaseQuantity int, time TEXT)";
+            String createUserPurchaseRecodeTableQuery = "CREATE TABLE IF NOT EXISTS usersPurchaseRecord" + 
+            "(productID INT usersPurchaseRecord key NOT NULL," +
+            "userID INT NOT NULL"+
+            "productName TEXT NOT NULL,"+
+            "productRetailPrice double, "+
+            "quantity int"+
+            "time String)";
             statement.executeUpdate(createUserPurchaseRecodeTableQuery);
             System.out.println("Database initialized successfully!");
         } catch (SQLException e) {
@@ -33,12 +55,102 @@ public class UserDatebaseInitializer implements DatebaseInitializer{
         }
     }
 
-    public void readUsers(ArrayList<User> users)
+    public void read(ArrayList<User> users, ArrayList<CartItem> cartItems, ArrayList<PurchaseItem> purchaseItems)
     {
-        System.out.print(users);
+        try(Connection connection = DriverManager.getConnection(DB_URL)){
+            String sql = "SELECT * FROM usersAccount WHERE " + "1";
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery(sql);
+            while(resultSet.next()){
+                users.add(new User(resultSet.getInt("userID"), resultSet.getString("userName"),
+                resultSet.getString("password"), resultSet.getString("userLevel"), resultSet.getString("registerTime"),
+                resultSet.getDouble("totalCost"), resultSet.getString("userPhoneNumber"), resultSet.getString("userEmail")));
+            }
+            sql = "SELECT * FROM usersShoppingCart WHERE " + "1";
+            resultSet = stmt.executeQuery(sql);
+            while(resultSet.next()){
+                cartItems.add(new CartItem(resultSet.getInt("productID"),resultSet.getInt("userID"), 
+                resultSet.getString("productName"),resultSet.getDouble("productPurchasePrice"), 
+                resultSet.getInt("quantity")));
+            }
+            sql = "SELECT * FROM usersPurchaseRecord WHERE " + "1";
+            resultSet = stmt.executeQuery(sql);
+            while(resultSet.next()){
+                purchaseItems.add(new PurchaseItem(resultSet.getInt("productID"),resultSet.getInt("userID"), 
+                resultSet.getString("productName"),resultSet.getDouble("productPurchasePrice"), 
+                resultSet.getInt("quantity"), resultSet.getString("time")));
+            }
+        } catch(SQLException e){
+            System.out.println("初始化数据库失败: " + e.getMessage());
+        }
     }
 
-    public void writeUsers(ArrayList<User> users){
-        System.out.print("a");
+    public void write(ArrayList<User> users, ArrayList<CartItem> cartItems, ArrayList<PurchaseItem> purchaseItems){
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        try {
+            // 1. 连接数据库
+            connection = DriverManager.getConnection(DB_URL);
+
+            // 2. 创建 PreparedStatement 对象，并指定 SQL 语句
+            String sql = "INSERT INTO products (userID, userName, password, userLevel, registerTime , totalCost , userPhoneNumber , userEmail) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            statement = connection.prepareStatement(sql);
+
+            // 3. 执行批量添加
+            for (User user : users) {
+                statement.setInt(1, user.getID());
+                statement.setString(2, user.getUsername());
+                statement.setString(3, user.getPassword());
+                statement.setString(4, user.getUserLevel());
+                statement.setString(5, user.getRegisterTime());
+                statement.setDouble(6, user.getTotalCost());
+                statement.setString(7, user.getPhoneNumber());
+                statement.setString(8, user.getEmail());
+                statement.addBatch();
+            }
+            statement.executeBatch();
+
+            sql = "INSERT INTO usersAccount (productID, userID, productName, productPurchasePrice, quantity) VALUES (?, ?, ?, ?, ?)";
+            statement = connection.prepareStatement(sql);
+
+            for (CartItem cartItem : cartItems) {
+                statement.setInt(1, cartItem.getID());
+                statement.setInt(2, cartItem.getUserID());
+                statement.setString(3, cartItem.getName());
+                statement.setDouble(4, cartItem.getPurcPrice());
+                statement.setInt(5, cartItem.getQuantity());
+                statement.addBatch();
+            }
+            statement.executeBatch();
+
+            sql = "INSERT INTO usersPurchaseRecord (productID, userID, productName, productPurchasePrice, quantity, time) VALUES (?, ?, ?, ?, ?, ?)";
+            statement = connection.prepareStatement(sql);
+
+            for (PurchaseItem purchaseItem : purchaseItems) {
+                statement.setInt(1, purchaseItem.getID());
+                statement.setInt(2, purchaseItem.getUserID());
+                statement.setString(3, purchaseItem.getName());
+                statement.setDouble(4, purchaseItem.getPurcPrice());
+                statement.setInt(5, purchaseItem.getQuantity());
+                statement.setString(6, purchaseItem.getTime());
+                statement.addBatch();
+            }
+            statement.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // 4. 关闭连接和 PreparedStatement
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

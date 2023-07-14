@@ -1,75 +1,62 @@
 package org.example.Admin;
+import org.example.User.User;
+import org.example.User.UserQueryParams;
 
+import java.util.Scanner;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.example.User.User;
-
-import java.sql.Statement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public class AdminUserManager {
-    private List<User> customers;
-    private static final String DB_URL = "jdbc:sqlite:usersAccount.db";
-
-    public void listAllCustomers(String position){
-        try(Connection connection = DriverManager.getConnection(DB_URL)){
-            String sql = "SELECT * FROM usersAccount WHERE " + position;
-            Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery(sql);
-            while(resultSet.next()){
-                System.out.print("用户名：" + resultSet.getString(2) + " ");
-                System.out.print("密码：" + resultSet.getString(3) + " ");
-                System.out.print("名字：" + resultSet.getString(4) + " ");
-                System.out.print("年龄：" + resultSet.getString(5) + " ");
-                System.out.print("性别：" + resultSet.getString(6) + " ");
-                System.out.println();
-            }
-        } catch(SQLException e){
-            System.out.println("初始化数据库失败: " + e.getMessage());
+    public void listAllCustomers(ArrayList<User> users){
+        for(User user : users){
+            System.out.print("客户ID：" + user.getID() + " ");
+            System.out.print("用户名：" + user.getUsername() + " ");
+            System.out.print("用户级别：" + user.getUserLevel() + " ");
+            System.out.print("用户注册时间：" + user.getRegisterTime() + " ");
+            System.out.print("客户累计消费总金额：" + user.getTotalCost() + " ");
+            System.out.print("用户手机号" + user.getPhoneNumber() + " ");
+            System.out.print("用户邮箱" + user.getEmail() + " ");
+            System.out.println();
         }
     }
 
-    public boolean deleteCustomer(String name){
-        try(Connection connection = DriverManager.getConnection(DB_URL)){
-            PreparedStatement prep = connection.prepareStatement("DELETE FROM usersAccount WHERE username = ?");
-            prep.setString(1, name);
-            prep.executeUpdate();
-
-            System.out.println("删除" + name + "信息成功！");
-
-            return true;
-        } catch(SQLException e){
-            System.out.println("未找到姓名为" + name + "的客户！");
-
-            return false;
+    public boolean deleteCustomer(ArrayList<User> users, String name){
+        Scanner scanner = new Scanner(System.in);
+        for(User user : users){
+            if(user.getUsername().equals(name)){                
+                System.out.println("是否要删除用户信息，删除后将无法恢复，按y确定，按n取消：");
+                String flag = scanner.nextLine();
+                if(flag.equalsIgnoreCase("y")){
+                    users.remove(user);
+                }else if(flag.equalsIgnoreCase("n")){
+                    System.out.println("已经删除" + user.getUsername() + "！");
+                }else{
+                    System.out.println("已经取消删除！");
+                }
+                return true;
+            }
         }
+        return false;
     }
 
-    public boolean searchCustomer(String name){
-        ResultSet resultSet = null;
-        try(Connection connection = DriverManager.getConnection(DB_URL)){
-            PreparedStatement prep = connection.prepareStatement("SELECT * FROM usersAccount WHERE username = ?");
-            prep.setString(1, name);
-            resultSet = prep.executeQuery();
+    public boolean searchCustomer(ArrayList<User> users, UserQueryParams queryParams){
+        List<User> results = new ArrayList<User>();
 
-            if(resultSet.next()){
-                System.out.print("用户名：" + resultSet.getString(2) + " ");
-                System.out.print("密码：" + resultSet.getString(3) + " ");
-                System.out.print("名字：" + resultSet.getString(4) + " ");
-                System.out.print("年龄：" + resultSet.getString(5) + " ");
-                System.out.print("性别" + resultSet.getString(6) + " ");
-                System.out.println();
-            }
-            return true;
-        } catch(SQLException e){
-            System.out.println("未找到姓名为" + name + "的客户！");
-
-            return false;
+        results = users.stream()
+                .filter(user -> !queryParams.hasName() || user.getUsername().equals(queryParams.getName()))
+                .filter(user -> !queryParams.hasID() || user.getID() == queryParams.getID())
+                .collect(Collectors.toList());
+        for(User user : results){
+            System.out.print("客户ID：" + user.getID() + " ");
+            System.out.print("用户名：" + user.getUsername() + " ");
+            System.out.print("用户级别：" + user.getUserLevel() + " ");
+            System.out.print("用户注册时间：" + user.getRegisterTime() + " ");
+            System.out.print("客户累计消费总金额：" + user.getTotalCost() + " ");
+            System.out.print("用户手机号" + user.getPhoneNumber() + " ");
+            System.out.print("用户邮箱" + user.getEmail() + " ");
+            System.out.println();
         }
+        return true;
     }
 }

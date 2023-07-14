@@ -5,8 +5,12 @@ import java.util.Scanner;
 import org.example.Admin.Admin;
 import org.example.Admin.AdminProductManager;
 import org.example.Admin.AdminUserManager;
+import org.example.Product.Product;
+import org.example.Product.ProductDatebaseInitializer;
+import org.example.Product.ProductQueryParams;
 import org.example.User.User;
 import org.example.User.UserDatebaseInitializer;
+import org.example.User.UserQueryParams;
 import org.example.User.UserShoppingAction;
 
 import java.util.ArrayList;
@@ -15,8 +19,13 @@ import java.util.List;
 public class MainShoppingSystem {
     public static void main(String[] args) {
         ArrayList<Product> products = new ArrayList<Product>();
+        ArrayList<User> users = new ArrayList<User>();
+        ArrayList<CartItem> cartItems = new ArrayList<CartItem>();
+        ArrayList<PurchaseItem> purchaseItems = new ArrayList<PurchaseItem>();
+
         UserDatebaseInitializer userDatebaseInitializer = new UserDatebaseInitializer();
         userDatebaseInitializer.initializeDatabase();
+        userDatebaseInitializer.read(users, cartItems, purchaseItems);
 
         ProductDatebaseInitializer productDateInitializer = new ProductDatebaseInitializer();
         productDateInitializer.initializeDatabase();
@@ -32,7 +41,8 @@ public class MainShoppingSystem {
 
         CartItem cartItem = new CartItem();
 
-        QueryParams queryParams = new QueryParams();
+        UserQueryParams userQueryParams = new UserQueryParams();
+        ProductQueryParams queryParams = new ProductQueryParams();
 
         Scanner scanner = new Scanner(System.in);
         int isReturn = 0; //是否返回上一级
@@ -82,17 +92,20 @@ public class MainShoppingSystem {
                                         choice = scanner.nextLine();
                                         switch(choice){
                                             case "1":
-                                                adminUserManager.listAllCustomers("1");
+                                                adminUserManager.listAllCustomers(users);
                                                 break;
                                             case "2":
                                                 System.out.print("请给出要删除客户的用户名：");
                                                 String deleteName = scanner.nextLine();
-                                                adminUserManager.deleteCustomer(deleteName);
+                                                adminUserManager.deleteCustomer(users, deleteName);
                                                 break;
                                             case "3":
+                                                System.out.println("请给出要搜索客户的ID：");
+                                                userQueryParams.setID(scanner.nextInt());
+                                                scanner.nextLine();
                                                 System.out.print("请给出要搜索客户的用户名：");
-                                                String searchName = scanner.nextLine();
-                                                adminUserManager.searchCustomer(searchName);
+                                                userQueryParams.setName(scanner.nextLine());
+                                                adminUserManager.searchCustomer(users, userQueryParams);
                                                 break;
                                             case "q":
                                                 isReturn = 1;
@@ -229,7 +242,7 @@ public class MainShoppingSystem {
                             System.out.println("管理员登录失败！");                            
                         }
                 } else if (role.equalsIgnoreCase("U")) {
-                    /*System.out.println("请选择操作：");
+                    System.out.println("请选择操作：");
                     System.out.println("1. 注册");
                     System.out.println("2. 登录");
                     System.out.print("当前为用户选择操作界面，若返回上一级请按q >");
@@ -381,12 +394,13 @@ public class MainShoppingSystem {
                             isReturn = 0;
                             break;
                         }  
-                    }*/
+                    }
                 } else {
                     System.out.println("无效的角色选择！");
                     break;
                 }
             }
+            userDatebaseInitializer.write(users, cartItems, purchaseItems);
             productDateInitializer.write(products);
         }
     }

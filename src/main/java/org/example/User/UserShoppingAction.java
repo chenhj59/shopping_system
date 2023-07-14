@@ -1,8 +1,14 @@
 package org.example.User;
+import org.example.CartItem;
+
+import java.util.stream.Collectors;
+import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.example.Product;
+import org.example.CartItem;
+import org.example.Product.Product;
+import org.example.Product.ProductQueryParams;
 
 import java.sql.*;
 public class UserShoppingAction {
@@ -11,59 +17,46 @@ public class UserShoppingAction {
     private double sum = 0.0;
     private int quantity = 0;
 
-    public Product searchProduct(String name) {
-        ResultSet resultSet = null;
-        Product product = new Product();
-        try(Connection connection = DriverManager.getConnection("jdbc:sqlite:products.db")){
-            PreparedStatement prep = connection.prepareStatement("SELECT * FROM products WHERE productName = ?");
-            prep.setString(1, name);
-            resultSet = prep.executeQuery();
+    public Product searchProduct(ArrayList<Product> products, int ID,  int quantity) {
+        List<Product> results = new ArrayList<Product>();
 
-            product.setName(resultSet.getString(2));
-            product.setPrice(resultSet.getDouble(3));
-            product.setInventory(resultSet.getInt(4));
-            product.setQunatitySold(resultSet.getInt(5));
-
-            return product;
-        } catch(SQLException e){
-            System.out.println(e.getMessage());
-
-            return product;
+        
+        for(Product product : results){
+            System.out.print("商品编号：" + product.getID() + " ");
+                System.out.print("商品名称：" + product.getName() + " ");
+                System.out.print("生产厂家：" + product.getManufacturer() + " ");
+                System.out.print("生产日期：" + product.getDateOfManufacture() + " ");
+                System.out.print("型号：" + product.getModel() + " ");
+                System.out.print("进货价格：" + product.getPurcPrice() + " ");
+                System.out.print("零售价格：" + product.getRetailPrice() + " ");
+                System.out.print("数量：" + product.getInventory() + " ");
+                System.out.println();
         }
+        return true;
     }
 
-    public void addItem(String username, Product product) {
-        product = searchProduct(product.getName());
-        try{
-            Connection conn = DriverManager.getConnection(DB_URL);
-            PreparedStatement prep = conn.prepareStatement("INSERT INTO usersShoppingCart (username, productPrice, productQuantitySold) values (?, ?, ?)");
-            prep.setString(1, username);
-            prep.setString(2, product.getName());
-            prep.setDouble(3, product.getPrice());
-            prep.setInt(4, product.getInventory());
-            prep.setInt(5, product.getQuantitySold());
-            prep.setInt(6, product.getQuantity());
-            prep.executeUpdate();
-            System.out.println("添加商品成功！");
-        }catch (SQLException e) {
-            System.out.println("初始化数据库失败: " + e.getMessage());
-        }
+    public void addItem(ArrayList<CartItem> cartItems, int ID, Product product, int quantity) {
+        cartItems.add(new CartItem(product.getID(), ID, product.getName(), 
+        product.getPurcPrice(), quantity));
     }
 
-    public boolean removeItem(Product product) {
-        try(Connection connection = DriverManager.getConnection(DB_URL)){
-            PreparedStatement prep = connection.prepareStatement("DELETE FROM usersShoppingCart WHERE productName = ?");
-            prep.setString(1, product.getName());
-            prep.executeUpdate();
-
-            System.out.println("已经将商品" + product.getName() + "从购物车移除！");
-
-            return true;
-        } catch(SQLException e){
-            System.out.println("未找到商品" + product.getName() + "的信息！");
-
-            return false;
+    public boolean removeItem(ArrayList<CartItem> cartItems, Product product) {
+        Scanner scanner = new Scanner(System.in);
+        for(CartItem cartItem : cartItems){
+            if(cartItem.getUsername().equals(name)){                
+                System.out.println("是否要删除用户信息，删除后将无法恢复，按y确定，按n取消：");
+                String flag = scanner.nextLine();
+                if(flag.equalsIgnoreCase("y")){
+                    cartItems.remove(user);
+                }else if(flag.equalsIgnoreCase("n")){
+                    System.out.println("已经删除" + user.getUsername() + "！");
+                }else{
+                    System.out.println("已经取消删除！");
+                }
+                return true;
+            }
         }
+        return false;
     }
 
     public void updateQuantity(Product product) {
