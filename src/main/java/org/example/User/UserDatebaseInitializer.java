@@ -32,19 +32,19 @@ public class UserDatebaseInitializer implements DatebaseInitializer{
             // 创建用户购物车表
             String createUserShopCartTableQuery = "CREATE TABLE IF NOT EXISTS usersShoppingCart" + 
             "(productID INT usersShoppingCart key NOT NULL," +
-            "userID INT NOT NULL"+
+            "userID INT NOT NULL,"+
             "productName TEXT NOT NULL,"+
-            "productPurchasePrice double, "+
+            "productRetailPrice double, "+
             "quantity int)";
             statement.executeUpdate(createUserShopCartTableQuery);
 
             // 创建用户购物记录表
             String createUserPurchaseRecodeTableQuery = "CREATE TABLE IF NOT EXISTS usersPurchaseRecord" + 
             "(productID INT usersPurchaseRecord key NOT NULL," +
-            "userID INT NOT NULL"+
+            "userID INT NOT NULL,"+
             "productName TEXT NOT NULL,"+
             "productRetailPrice double, "+
-            "quantity int"+
+            "quantity int,"+
             "time String)";
             statement.executeUpdate(createUserPurchaseRecodeTableQuery);
             System.out.println("Database initialized successfully!");
@@ -70,14 +70,14 @@ public class UserDatebaseInitializer implements DatebaseInitializer{
             resultSet = stmt.executeQuery(sql);
             while(resultSet.next()){
                 cartItems.add(new CartItem(resultSet.getInt("productID"),resultSet.getInt("userID"), 
-                resultSet.getString("productName"),resultSet.getDouble("productPurchasePrice"), 
+                resultSet.getString("productName"),resultSet.getDouble("productRetailPrice"), 
                 resultSet.getInt("quantity")));
             }
             sql = "SELECT * FROM usersPurchaseRecord WHERE " + "1";
             resultSet = stmt.executeQuery(sql);
             while(resultSet.next()){
                 purchaseItems.add(new PurchaseItem(resultSet.getInt("productID"),resultSet.getInt("userID"), 
-                resultSet.getString("productName"),resultSet.getDouble("productPurchasePrice"), 
+                resultSet.getString("productName"),resultSet.getDouble("productRetailPrice"), 
                 resultSet.getInt("quantity"), resultSet.getString("time")));
             }
         } catch(SQLException e){
@@ -93,8 +93,12 @@ public class UserDatebaseInitializer implements DatebaseInitializer{
             // 1. 连接数据库
             connection = DriverManager.getConnection(DB_URL);
 
+            // 对用户账号信息操作
+            Statement stmt = connection.createStatement();
+            stmt.executeUpdate("DELETE FROM usersAccount");
+
             // 2. 创建 PreparedStatement 对象，并指定 SQL 语句
-            String sql = "INSERT INTO products (userID, userName, password, userLevel, registerTime , totalCost , userPhoneNumber , userEmail) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO usersAccount (userID, userName, password, userLevel, registerTime , totalCost , userPhoneNumber , userEmail) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             statement = connection.prepareStatement(sql);
 
             // 3. 执行批量添加
@@ -111,7 +115,11 @@ public class UserDatebaseInitializer implements DatebaseInitializer{
             }
             statement.executeBatch();
 
-            sql = "INSERT INTO usersAccount (productID, userID, productName, productPurchasePrice, quantity) VALUES (?, ?, ?, ?, ?)";
+            //对用户购物车信息操作
+            stmt = connection.createStatement();
+            stmt.executeUpdate("DELETE FROM usersShoppingCart");
+
+            sql = "INSERT INTO usersShoppingCart (productID, userID, productName, productRetailPrice, quantity) VALUES (?, ?, ?, ?, ?)";
             statement = connection.prepareStatement(sql);
 
             for (CartItem cartItem : cartItems) {
@@ -124,7 +132,10 @@ public class UserDatebaseInitializer implements DatebaseInitializer{
             }
             statement.executeBatch();
 
-            sql = "INSERT INTO usersPurchaseRecord (productID, userID, productName, productPurchasePrice, quantity, time) VALUES (?, ?, ?, ?, ?, ?)";
+            // 对用户消费记录操作
+            stmt = connection.createStatement();
+            stmt.executeUpdate("DELETE FROM usersPurchaseRecord");
+            sql = "INSERT INTO usersPurchaseRecord (productID, userID, productName, productRetailPrice, quantity, time) VALUES (?, ?, ?, ?, ?, ?)";
             statement = connection.prepareStatement(sql);
 
             for (PurchaseItem purchaseItem : purchaseItems) {

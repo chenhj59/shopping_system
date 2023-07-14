@@ -68,7 +68,7 @@ public class AdminProductManager {
         results = products.stream()
                 .filter(product -> !queryParams.hasName() || product.getName().equals(queryParams.getName()))
                 .filter(product -> !queryParams.hasManu() || product.getManufacturer().equals(queryParams.getManu()))
-                .filter(product -> !queryParams.hasRetPrice() || product.getRetailPrice() > queryParams.getRetPrice())
+                .filter(product -> !queryParams.hasRetPrice() || product.getRetailPrice() == queryParams.getRetPrice())
                 .collect(Collectors.toList());
         for(Product product : results){
             System.out.print("商品编号：" + product.getID() + " ");

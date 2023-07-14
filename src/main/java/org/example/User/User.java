@@ -36,8 +36,8 @@ public class User extends Account{
         this.userEmail = userEmail;
     }
 
-    public void register(ArrayList<User> users, String username, String password, String userLevel, String registerTime, double totalCost, String userPhoneNumber, String userEmail){
-        users.add(new User(users.size(), username, password, userLevel, registerTime, totalCost, userPhoneNumber, userEmail));
+    public void register(ArrayList<User> users, User user){
+        users.add(user);
     }
 
     @Override
@@ -45,10 +45,11 @@ public class User extends Account{
         return true;
         }
 
-    public boolean login(ArrayList<User> users, String username, String password) {
+    public boolean login(ArrayList<User> users, User u, String username, String password) {
         for(User user : users){
             if(user.getUsername().equals(username)){
                 if(user.getPassword().equals(password)){
+                    user = u;
                     return true;
                 }else{
                     return false;

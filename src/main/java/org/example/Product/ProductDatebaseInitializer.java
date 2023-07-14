@@ -12,8 +12,8 @@ public class ProductDatebaseInitializer implements DatebaseInitializer{
             Connection connection = DriverManager.getConnection(DB_URL);
             Statement statement = connection.createStatement();
             String createTableQuery = "CREATE TABLE IF NOT EXISTS products" + 
-            "(productID INT products key NOT NULL," +
-            "productName TEXT NOT NULL,"+
+            "(productID INT products key not null, " +
+            "productName TEXT NOT NULL, "+
             "productManufacturer TEXT NOT NULL,"+
             "productDateOfManufacture TEXT,"+
             "productModel TEXT, "+
@@ -30,14 +30,15 @@ public class ProductDatebaseInitializer implements DatebaseInitializer{
     }
 
     public void read(ArrayList<Product> products){
-        try(Connection connection = DriverManager.getConnection(DB_URL)){
+        try{
+            Connection connection = DriverManager.getConnection(DB_URL);
             String sql = "SELECT * FROM products WHERE " + "1";
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery(sql);
             while(resultSet.next()){
                 products.add(new Product(resultSet.getInt("productID"), resultSet.getString("productName"),
-                resultSet.getString("productManufacturer"), resultSet.getString("productDateOfManufacture"), resultSet.getString("productDateOfManufacture"),
-                resultSet.getDouble("productModel"), resultSet.getDouble("productPurchasePrice"), resultSet.getInt("productInventory")));
+                resultSet.getString("productManufacturer"), resultSet.getString("productDateOfManufacture"), resultSet.getString("productModel"), 
+                resultSet.getDouble("productPurchasePrice"), resultSet.getDouble("productRetailPrice"), resultSet.getInt("productInventory")));
             }
         } catch(SQLException e){
             System.out.println("初始化数据库失败: " + e.getMessage());
@@ -47,10 +48,12 @@ public class ProductDatebaseInitializer implements DatebaseInitializer{
     public void write(ArrayList<Product> products){
         Connection connection = null;
         PreparedStatement statement = null;
-
         try {
             // 1. 连接数据库
             connection = DriverManager.getConnection(DB_URL);
+
+            Statement stmt = connection.createStatement();
+            stmt.executeUpdate("DELETE FROM products");
 
             // 2. 创建 PreparedStatement 对象，并指定 SQL 语句
             String sql = "INSERT INTO products (productID, productName, productManufacturer, productDateOfManufacture, productModel , productPurchasePrice , productRetailPrice , productInventory) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

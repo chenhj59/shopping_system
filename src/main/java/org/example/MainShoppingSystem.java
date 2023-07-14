@@ -1,6 +1,13 @@
 package org.example;
+
 import java.sql.*;
+
 import java.util.Scanner;
+import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+import java.text.SimpleDateFormat;
 
 import org.example.Admin.Admin;
 import org.example.Admin.AdminProductManager;
@@ -12,9 +19,6 @@ import org.example.User.User;
 import org.example.User.UserDatebaseInitializer;
 import org.example.User.UserQueryParams;
 import org.example.User.UserShoppingAction;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainShoppingSystem {
     public static void main(String[] args) {
@@ -31,25 +35,22 @@ public class MainShoppingSystem {
         productDateInitializer.initializeDatabase();
         productDateInitializer.read(products);
 
-        UserShoppingAction userShoppingAction = new UserShoppingAction();
-
         Admin admin = new Admin();
         AdminUserManager adminUserManager = new AdminUserManager();
         AdminProductManager adminProductManager = new AdminProductManager();
 
-        Product product = new Product();
-
-        CartItem cartItem = new CartItem();
-
         User user = new User();
         UserQueryParams userQueryParams = new UserQueryParams();
+        UserShoppingAction userShoppingAction = new UserShoppingAction();
+
+        Product product = new Product();
         ProductQueryParams queryParams = new ProductQueryParams();
 
         Scanner scanner = new Scanner(System.in);
+
         int isReturn = 0; //是否返回上一级
         String role = "";
         String choice = "";
-        String userInput = "";
         int exit = 0;
         while(true){
             if(exit == 1){
@@ -137,27 +138,28 @@ public class MainShoppingSystem {
                                             adminProductManager.listAllProducts(products);
                                                 break;
                                             case "2":
+                                                Product pro = new Product();
                                                 System.out.print("请给出要添加的商品编号：");
-                                                product.setID(scanner.nextInt());
+                                                pro.setID(scanner.nextInt());
                                                 scanner.nextLine();
                                                 System.out.print("请给出要添加的商品名称：");
-                                                product.setName(scanner.nextLine());
+                                                pro.setName(scanner.nextLine());
                                                 System.out.print("请给出要添加的商品得生产厂家：");
-                                                product.setManufacturer(scanner.nextLine());
+                                                pro.setManufacturer(scanner.nextLine());
                                                 System.out.print("请给出要添加的商品的生产日期：");
-                                                product.setDateOfManufacture(scanner.nextLine());
+                                                pro.setDateOfManufacture(scanner.nextLine());
                                                 System.out.print("请给出要添加的商品的型号：");
-                                                product.setModel(scanner.nextLine());
+                                                pro.setModel(scanner.nextLine());
                                                 System.out.print("请给出要添加的商品的进货价格：");
-                                                product.setPurcPrice(scanner.nextDouble());
+                                                pro.setPurcPrice(scanner.nextDouble());
                                                 scanner.nextLine();
                                                 System.out.print("请给出要添加的商品的零售价格：");
-                                                product.setRetailPrice(scanner.nextDouble());
+                                                pro.setRetailPrice(scanner.nextDouble());
                                                 scanner.nextLine();
                                                 System.out.print("请给出要添加的商品的数量：");
-                                                product.setInventory(scanner.nextInt());
+                                                pro.setInventory(scanner.nextInt());
                                                 scanner.nextLine();  //吸收回车键
-                                                adminProductManager.addProduct(products, product);
+                                                adminProductManager.addProduct(products, pro);
                                                 break;
                                             case "3":
                                             System.out.print("请给出要修改的商品编号：");
@@ -253,13 +255,11 @@ public class MainShoppingSystem {
                         break;
                     }
                     String password="";
-                    String username="";
-                    String name="";
-                    String age="";
-                    String sex="";                
+                    String username="";              
                     while(true){
                         switch(choice){
                             case "1":
+                                User u = new User();
                                 System.out.print("当前为用户注册界面，若返回上一级请按q，否则按任意键继续 >");
                                 choice = scanner.nextLine();
                                 if(choice.equals("q"))
@@ -267,16 +267,23 @@ public class MainShoppingSystem {
                                     break;
                                 }
                                 System.out.println("请输入用户名：");
-                                username = scanner.nextLine();
+                                u.setUsername(scanner.nextLine());
                                 System.out.println("请输入密码：");
-                                password = scanner.nextLine();
-                                System.out.println("请输入姓名：");
-                                name = scanner.nextLine();
-                                System.out.println("请输入年龄：");
-                                age = scanner.nextLine();
-                                System.out.println("请输入性别：");
-                                sex = scanner.nextLine();
-                                user.register(username, password, name, age, sex); // 不加break，因为注册成功直接进入登录界面
+                                u.setPassword(scanner.nextLine());
+                                System.out.println("请输入手机号：");
+                                u.setPhoneNumber(scanner.nextLine());
+                                System.out.println("请输入邮箱：");
+                                u.setEmail(scanner.nextLine());
+                                u.setID(users.size()+1);
+                                u.setUserLevel("铜牌客户"); //默认初始等级为铜牌客户
+                                u.setTotalCost(0.0);
+                                Date currentDate = new Date();
+                                // 创建 SimpleDateFormat 对象，并定义日期时间格式
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                // 使用 format() 方法将 Date 对象转换为字符串
+                                String dateString = dateFormat.format(currentDate);
+                                u.setRegisterTime(dateString);
+                                user.register(users, u); // 不加break，因为注册成功直接进入登录界面
                             case "2":
                             while(true){
                                 System.out.print("当前为用户登录界面，若返回上一级请按q，否则按任意键继续 >");
@@ -289,7 +296,7 @@ public class MainShoppingSystem {
                                 username = scanner.nextLine();
                                 System.out.println("请输入用户密码：");
                                 password = scanner.nextLine();
-                                if (user.login(username, password)) {               
+                                if (user.login(users, user, username, password)) {               
                                     while (true) {
                                         System.out.println("请选择操作：");
                                         System.out.println("1. 购物");
@@ -311,31 +318,37 @@ public class MainShoppingSystem {
                                                 choice = scanner.nextLine();
                                                 switch(choice){
                                                     case "1":
-                                                        System.out.print("请给出要添加的商品名：");
-                                                        product.setName(scanner.nextLine());    
+                                                        System.out.print("请给出要添加的商品编号：");
+                                                        product.setID(scanner.nextInt());   
+                                                        scanner.nextLine(); 
                                                         System.out.print("请给出你需要购买数量：");
                                                         int quantity = scanner.nextInt();  
-                                                        scanner.nextLine();                                                  
-                                                        userShoppingAction.addItem(cartItems, userID, quantity);
+                                                        scanner.nextLine();       
+                                                        product = userShoppingAction.searchProduct(products, product); 
+                                                        if(product != null){
+                                                            userShoppingAction.addItem(cartItems, user.getID(), product, quantity);
+                                                        }else{
+                                                            System.out.println("搜索不到商品！");
+                                                        }                              
                                                         break;
                                                     case "2":
                                                         System.out.print("请给出要移除的商品名：");
                                                         product.setName(scanner.nextLine());
-                                                        userShoppingAction.removeItem(product);
+                                                        userShoppingAction.removeItem(cartItems, product);
                                                         break;
                                                     case "3":
                                                         System.out.print("请给出要修改的商品名：");
                                                         product.setName(scanner.nextLine());
                                                         System.out.print("请给出你需要购买数量：");
-                                                        product.setQunatity(scanner.nextInt());
+                                                        quantity = scanner.nextInt();
                                                         scanner.nextLine();
-                                                        userShoppingAction.updateQuantity(product);
+                                                        userShoppingAction.updateQuantity(cartItems, product, quantity);
                                                         break;
                                                     case "4":
-                                                        userShoppingAction.checkout(username);
+                                                        userShoppingAction.checkout(purchaseItems, cartItems, user.getID());
                                                         break;
                                                     case "5":
-                                                        userShoppingAction.viewShoppingHistory(username);
+                                                        userShoppingAction.viewShoppingHistory(purchaseItems, user.getID());
                                                         break;
                                                     case "q":
                                                         isReturn = 1;

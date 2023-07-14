@@ -20,22 +20,15 @@ public class UserShoppingAction {
     private double sum = 0.0;
     private int quantity = 0;
 
-    public Boolean searchProduct(ArrayList<Product> products, int ID,  int quantity) {
+    public Product searchProduct(ArrayList<Product> products, Product product) {
         List<Product> results = new ArrayList<Product>();
 
-        
-        for(Product product : results){
-            System.out.print("商品编号：" + product.getID() + " ");
-                System.out.print("商品名称：" + product.getName() + " ");
-                System.out.print("生产厂家：" + product.getManufacturer() + " ");
-                System.out.print("生产日期：" + product.getDateOfManufacture() + " ");
-                System.out.print("型号：" + product.getModel() + " ");
-                System.out.print("进货价格：" + product.getPurcPrice() + " ");
-                System.out.print("零售价格：" + product.getRetailPrice() + " ");
-                System.out.print("数量：" + product.getInventory() + " ");
-                System.out.println();
+        for(Product pro : products){
+            if(pro.getID() == product.getID()){
+                return pro;
+            }
         }
-        return true;
+        return null;
     }
 
     public void addItem(ArrayList<CartItem> cartItems, int ID, Product product, int quantity) {
@@ -47,7 +40,7 @@ public class UserShoppingAction {
         Scanner scanner = new Scanner(System.in);
         for(CartItem cartItem : cartItems){
             if(cartItem.getName().equals(product.getName())){                
-                System.out.println("是否要删除用户信息，删除后将无法恢复，按y确定，按n取消：");
+                System.out.println("是否要从购物车移除商品，删除后将无法恢复，按y确定，按n取消：");
                 String flag = scanner.nextLine();
                 if(flag.equalsIgnoreCase("y")){
                     cartItems.remove(cartItem);
@@ -62,21 +55,35 @@ public class UserShoppingAction {
         return false;
     }
 
-    public void updateQuantity(Product product) {
+    public void updateQuantity(ArrayList<CartItem> cartItems, Product product, int quantity) {
+        int idx = 0;
+        for(CartItem cartItem : cartItems){
+            if(cartItem.getName().equals(product.getName())){
+                cartItem.setQunatity(quantity);
+                cartItems.set(idx, cartItem);         
+                System.out.println("成功更新商品" + product.getName() + "的数量");
+                return;
+            }
+            idx++;
+        }
     }
 
-    public void calculateTotalPrice(ArrayList<CartItem> cartItems, ArrayList<CartItem> results, int userID) {
+    public ArrayList<CartItem> calculateTotalPrice(ArrayList<CartItem> cartItems, int userID) {
+        ArrayList<CartItem> results = new ArrayList<CartItem>();
         for(CartItem cartItem : cartItems){
-            if(cartItem.getID() == userID){
+            if(cartItem.getUserID() == userID){
                 sum += cartItem.getPurcPrice() * cartItem.getQuantity();
+                results.add(cartItem);
             }
         }
+
+        return results;
     }
 
     public void checkout(ArrayList<PurchaseItem> PurchaseItems, ArrayList<CartItem> cartItems, int userID) {
         ArrayList<CartItem> results = null;
 
-        calculateTotalPrice(cartItems, results, userID);
+        results = calculateTotalPrice(cartItems, userID);
         System.out.println("共需支付" + sum + "元！");
         System.out.println("已经通过微信支付" + sum + "元！");       
         addShoppingHistory(PurchaseItems, results);
@@ -97,14 +104,17 @@ public class UserShoppingAction {
 
     }
 
-    public void viewShoppingHistory(ArrayList<PurchaseItem> PurchaseItems) {
+    public void viewShoppingHistory(ArrayList<PurchaseItem> PurchaseItems, int userID) {
         for(PurchaseItem PurchaseItem : PurchaseItems){
-            System.out.print("商品编号：" + PurchaseItem.getID() + " ");
-            System.out.print("商品名称：" + PurchaseItem.getName() + " ");
-            System.out.print("商品价格：" + PurchaseItem.getPurcPrice() + " ");
-            System.out.print("购买数量：" + PurchaseItem.getQuantity() + " ");
-            System.out.print("购买时间：" + PurchaseItem.getTime() + " ");
-            System.out.println();
+            if(PurchaseItem.getUserID() == userID){
+                System.out.print("商品编号：" + PurchaseItem.getID() + " ");
+                System.out.print("商品名称：" + PurchaseItem.getName() + " ");
+                System.out.print("商品价格：" + PurchaseItem.getPurcPrice() + " ");
+                System.out.print("购买数量：" + PurchaseItem.getQuantity() + " ");
+                System.out.print("购买时间：" + PurchaseItem.getTime() + " ");
+                System.out.println();
+            }
+            
         }
     }
 }
