@@ -11,13 +11,17 @@ import org.example.Product.Product;
 public class UserShoppingAction {
     private double sum = 0.0;
 
-    public Product searchProduct(ArrayList<Product> products, Product product) {
+    public int searchProduct(ArrayList<Product> products, Product product) {
+        int idx = 0;
         for(Product pro : products){
             if(pro.getID() == product.getID()){
-                return pro;
+                product.setName(pro.getName());
+                product.setPurcPrice(pro.getPurcPrice());
+                return idx;
             }
+            idx++;
         }
-        return null;
+        return -1;
     }
 
     public void addItem(ArrayList<CartItem> cartItems, int ID, Product product, int quantity) {
@@ -61,24 +65,40 @@ public class UserShoppingAction {
         }
     }
 
-    public ArrayList<CartItem> calculateTotalPrice(ArrayList<CartItem> cartItems, int userID) {
+    public ArrayList<CartItem> calculateTotalPrice(ArrayList<Product> products, ArrayList<CartItem> cartItems, int userID) {
         ArrayList<CartItem> results = new ArrayList<CartItem>();
+        Product product = new Product();
+        int idx = 0;
         for(CartItem cartItem : cartItems){
             if(cartItem.getUserID() == userID){
-                sum += cartItem.getPurcPrice() * cartItem.getQuantity();
-                results.add(cartItem);
+                product.setID(cartItem.getID());
+                idx =searchProduct(products, product);
+                if(products.get(idx).getInventory() >= cartItem.getQuantity()){
+                    products.get(idx).setInventory(products.get(idx).getInventory()-cartItem.getQuantity());
+                    sum += cartItem.getPurcPrice() * cartItem.getQuantity();
+                    results.add(cartItem);
+                }else{
+                    System.out.println("购买失败，库存不够！");
+                    return null;
+                }
+                
             }
         }
+        cartItems.clear();
 
         return results;
     }
 
-    public void checkout(ArrayList<PurchaseItem> PurchaseItems, ArrayList<CartItem> cartItems, int userID) {
+    public void checkout(ArrayList<User> users, ArrayList<Product> products, ArrayList<PurchaseItem> PurchaseItems, ArrayList<CartItem> cartItems, int userID, int userIdx) {
         ArrayList<CartItem> results = null;
 
-        results = calculateTotalPrice(cartItems, userID);
+        results = calculateTotalPrice(products, cartItems, userID);
+        if(results == null){
+            return;
+        }
         System.out.println("共需支付" + sum + "元！");
-        System.out.println("已经通过微信支付" + sum + "元！");       
+        System.out.println("已经通过微信支付" + sum + "元！");  
+        users.get(userIdx).setTotalCost(sum);    
         addShoppingHistory(PurchaseItems, results);
     }
 
@@ -93,8 +113,6 @@ public class UserShoppingAction {
         for(CartItem cartItem : results){
             PurchaseItems.add(new PurchaseItem(cartItem.getID(), cartItem.getUserID(), cartItem.getName(), cartItem.getPurcPrice(), cartItem.getQuantity(), dateString));
         }
-
-
     }
 
     public void viewShoppingHistory(ArrayList<PurchaseItem> PurchaseItems, int userID) {

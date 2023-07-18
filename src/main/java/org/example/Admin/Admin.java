@@ -3,6 +3,33 @@ package org.example.Admin;
 import org.example.Account;
 
 public class Admin extends Account{
+    String adminname = null;
+    String adminPassword = null;
+
+    public Admin(){
+
+    }
+
+    public Admin(String name, String password){
+        this.adminname = name;
+        this.adminPassword = password;
+    }
+
+    public void setName(String name){
+        this.adminname = name;
+    }
+    public void setPassword(String password){
+        this.adminPassword  = password;
+    }
+
+    public String getName(){
+        return adminname;
+    }
+
+    public String getPassword(){
+        return adminPassword;
+    }
+    
     public boolean login(String username, String password) {
         // 验证管理员用户名和密码的正确性
         if ("admin".equals(username) && "admin123".equals(password)) {

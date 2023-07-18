@@ -45,18 +45,20 @@ public class User extends Account{
         return true;
         }
 
-    public boolean login(ArrayList<User> users, User u, String username, String password) {
+    public int login(ArrayList<User> users, User u, String username, String password) {
+        int idx = 0;
         for(User user : users){
             if(user.getUsername().equals(username)){
                 if(user.getPassword().equals(password)){
-                    user = u;
-                    return true;
+                    u.setID(user.getID());
+                    return idx;
                 }else{
-                    return false;
+                    return -1;
                 }
             }
+            idx++;
         }
-        return false;
+        return -1;
     } 
 
     public int getID(){
