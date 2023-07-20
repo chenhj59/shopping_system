@@ -1,7 +1,7 @@
 package org.example;
 
 public abstract class QueryParams {   
-    public String name;
+    public String name = null;
 
     public abstract boolean hasName();
 

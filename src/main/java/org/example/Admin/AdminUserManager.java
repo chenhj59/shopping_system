@@ -40,22 +40,23 @@ public class AdminUserManager {
         return false;
     }
 
-    public boolean searchCustomer(ArrayList<User> users, UserQueryParams queryParams){
+    public boolean searchCustomer(ArrayList<User> users, UserQueryParams queryParams, boolean isOut){
         List<User> results = new ArrayList<User>();
-
         results = users.stream()
                 .filter(user -> !queryParams.hasName() || user.getUsername().equals(queryParams.getName()))
                 .filter(user -> !queryParams.hasID() || user.getID() == queryParams.getID())
                 .collect(Collectors.toList());
         for(User user : results){
-            System.out.print("客户ID：" + user.getID() + " ");
-            System.out.print("用户名：" + user.getUsername() + " ");
-            System.out.print("用户级别：" + user.getUserLevel() + " ");
-            System.out.print("用户注册时间：" + user.getRegisterTime() + " ");
-            System.out.print("客户累计消费总金额：" + user.getTotalCost() + " ");
-            System.out.print("用户手机号" + user.getPhoneNumber() + " ");
-            System.out.print("用户邮箱" + user.getEmail() + " ");
-            System.out.println();
+            if(isOut){
+                System.out.print("客户ID：" + user.getID() + " ");
+                System.out.print("用户名：" + user.getUsername() + " ");
+                System.out.print("用户级别：" + user.getUserLevel() + " ");
+                System.out.print("用户注册时间：" + user.getRegisterTime() + " ");
+                System.out.print("客户累计消费总金额：" + user.getTotalCost() + " ");
+                System.out.print("用户手机号" + user.getPhoneNumber() + " ");
+                System.out.print("用户邮箱" + user.getEmail() + " ");
+                System.out.println();
+            }
         }
         return true;
     }

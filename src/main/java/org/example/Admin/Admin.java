@@ -1,7 +1,10 @@
 package org.example.Admin;
 
+import org.example.User.User;
+
 import org.example.Account;
 
+import java.util.ArrayList;
 public class Admin extends Account{
     String adminname = null;
     String adminPassword = null;
@@ -38,6 +41,21 @@ public class Admin extends Account{
         return false; // 登录失败返回false
     }
 
+    public int login(ArrayList<Admin> admins, Admin a, String name, String password) {
+        int idx = 0;
+        for(Admin admin : admins){
+            if(admin.getName().equals(name)){
+                if(admin.getPassword().equals(password)){
+                    return idx;
+                }else{
+                    return -1;
+                }
+            }
+            idx++;
+        }
+        return -1;
+    } 
+    
     public String getUsername() {
         return this.username;
     }
@@ -46,11 +64,27 @@ public class Admin extends Account{
         this.username = username;
     }
 
+    @Override
     public void changePassword(String username, String newPassword) {
         // 实现密码管理逻辑，修改管理员密码
         this.password = newPassword;
     }
-
+    public void changePassword(ArrayList<Admin> admins, int idx, String username, String password){
+        admins.get(idx).setPassword(password);
+    }
+    public static int searchUser(ArrayList<User> users, String name){
+        int idx = 0;
+        for(User user : users){
+            if(user.getUsername().equals(name)){
+                return idx;
+            }
+            idx++;
+        }
+        return -1;
+    }
+    public void resetPassword(ArrayList<User> users, int idx){
+        users.get(idx).setPassword("user123...");
+    }
     public void logout() {
         // 实现退出登录逻辑
         System.out.println("Logout successfully.");

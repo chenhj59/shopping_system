@@ -80,13 +80,14 @@ public class MainShoppingSystem {
                     adminname = scanner.nextLine();
                     System.out.println("请输入管理员密码：");
                     password = scanner.nextLine();
-                        if (admin.login(adminname, password)) {
+                    int adminIdx = admin.login(admins, admin, adminname, password);
+                        if (adminIdx != -1) {
                             System.out.println("管理员登录成功！");
                             while (true) {
                                 System.out.println("请选择操作：");
                                 System.out.println("1. 管理客户");
                                 System.out.println("2. 管理商品");
-                                System.out.println("3. 修改密码");
+                                System.out.println("3. 密码管理");
                                 System.out.println("4. 退出登录");
                                 System.out.print("当前为管理员选择操作界面，若返回上一级请按q >");
                                 choice = scanner.nextLine();
@@ -121,7 +122,7 @@ public class MainShoppingSystem {
                                                 } 
                                                 System.out.print("请给出要搜索客户的用户名：");
                                                 userQueryParams.setName(scanner.nextLine());
-                                                adminUserManager.searchCustomer(users, userQueryParams);
+                                                adminUserManager.searchCustomer(users, userQueryParams, true);
                                                 break;
                                             case "q":
                                                 isReturn = 1;
@@ -289,17 +290,62 @@ public class MainShoppingSystem {
                                         }                                       
                                         break;
                                     case "3":
-                                        System.out.print("当前为管理员修改密码界面，若返回上一级请按q，否则按任意键继续 >");
-                                        choice = scanner.nextLine();
-                                        if(choice.equals("q"))
-                                        {
-                                            break;
-                                        }else if(choice.equals("exit")){
-                                            isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                                        while(true){
+                                            System.out.println("请选择操作：");
+                                            System.out.println("1. 修改密码");
+                                            System.out.println("2. 重置密码");
+                                            System.out.print("当前为管理员密码管理界面，若返回上一级请按q >");
+                                            choice = scanner.nextLine();
+                                            if(choice.equals("q"))
+                                            {
+                                                break;
+                                            }else if(choice.equals("exit")){
+                                                isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                                            }
+                                            switch(choice){
+                                                case "1":
+                                                    System.out.print("当前为管理员修改密码界面，若返回上一级请按q，否则按任意键继续 >");
+                                                    choice = scanner.nextLine();
+                                                    if(choice.equals("q"))
+                                                    {
+                                                        break;
+                                                    }else if(choice.equals("exit")){
+                                                        isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                                                    }
+                                                    System.out.println("请输入新密码：");
+                                                    String newPassword = scanner.nextLine();
+                                                    admin.changePassword(admins, adminIdx, adminname, newPassword);
+                                                    break;
+                                                case "2":
+                                                    System.out.print("当前为管理员密码重置界面，若返回上一级请按q，否则按任意键继续 >");
+                                                    choice = scanner.nextLine();
+                                                    if(choice.equals("q"))
+                                                    {
+                                                        break;
+                                                    }else if(choice.equals("exit")){
+                                                        isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                                                    }
+                                                    System.out.println("请输入要重置密码的用户名：");
+                                                    String username  = scanner.nextLine();
+                                                    int userIdx = Admin.searchUser(users, username);
+                                                    admin.resetPassword(users, userIdx);
+                                                    break;
+                                                case "q":
+                                                    isReturn = 1;
+                                                    break;
+                                                case "exit":
+                                                    isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                                                    break;
+                                                default:
+                                                    System.out.println("无效的选择！");
+                                                    break;
+                                            }
+                                            if(isReturn == 1)
+                                            {
+                                                isReturn = 0;
+                                                break;
+                                            }
                                         }
-                                        System.out.println("请输入新密码：");
-                                        String newPassword = scanner.nextLine();
-                                        admin.changePassword(adminname, newPassword);
                                         break;
                                     case "4":
                                         admin.logout();
@@ -478,7 +524,7 @@ public class MainShoppingSystem {
                                                 }
                                                 System.out.println("请输入新密码：");
                                                 String newPassword = scanner.nextLine();
-                                                user.changePassword(username, newPassword);
+                                                user.changePassword(users, userIdx, username, newPassword);
                                                 break;
                                             case "3":
                                                 user.logout();

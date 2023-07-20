@@ -146,7 +146,9 @@ public class User extends Account{
             System.out.println("加载JDBC失败: " + e.getMessage());
         }
     }
-
+    public void changePassword(ArrayList<User> users, int idx, String username, String password){
+        users.get(idx).setPassword(password);
+    }
     public void logout() {
         // 实现退出登录逻辑
         System.out.println("Logout successfully.");
