@@ -10,7 +10,7 @@ import java.sql.*;
 
 public class User extends Account{
     // 正则表达式，验证密码是否符合格式
-    private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[a-zA-Z\\d@$!%*?&]{8,}$";
+    private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()-_=+[{]};:'\",<.>/?])[a-zA-Z\\d!@#$%^&*()-_=+[{]};:'\",<.>/?]{8,}$";
     private static final String LOWER_CASE = "abcdefghijklmnopqrstuvwxyz";
     private static final String UPPER_CASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String DIGITS = "0123456789";
@@ -45,7 +45,7 @@ public class User extends Account{
     }
 
     public static boolean validatePassword(String password) {
-        return password.matches(PASSWORD_PATTERN);
+        return (password.length()>8 && password.matches(PASSWORD_PATTERN));
     }
 
     public void register(ArrayList<User> users, User user){

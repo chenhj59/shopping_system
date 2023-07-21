@@ -528,15 +528,22 @@ public class MainShoppingSystem {
                                                 }        
                                                 break;
                                             case "2":
-                                                System.out.print("当前为用户修改密码界面，若返回上一级请按q，否则按任意键继续 >");
-                                                choice = scanner.nextLine();
-                                                if(choice.equals("q"))
-                                                {
+                                                while(true){
+                                                    System.out.print("当前为用户修改密码界面，若返回上一级请按q，否则按任意键继续 >");
+                                                    choice = scanner.nextLine();
+                                                    if(choice.equals("q"))
+                                                    {
+                                                        break;
+                                                    }
+                                                    System.out.println("请输入新密码：");
+                                                    String newPassword = scanner.nextLine();
+                                                    if(!User.validatePassword(newPassword)){
+                                                        System.out.println("密码格式错误，请重新输入！");
+                                                        continue;
+                                                    }
+                                                    user.changePassword(users, userIdx, username, newPassword);
                                                     break;
                                                 }
-                                                System.out.println("请输入新密码：");
-                                                String newPassword = scanner.nextLine();
-                                                user.changePassword(users, userIdx, username, newPassword);
                                                 break;
                                             case "3":
                                                 user.logout();
