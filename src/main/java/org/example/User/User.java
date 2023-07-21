@@ -1,4 +1,6 @@
 package org.example.User;
+
+import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,12 @@ import org.example.Account;
 import java.sql.*;
 
 public class User extends Account{
+    // 正则表达式，验证密码是否符合格式
+    private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[a-zA-Z\\d@$!%*?&]{8,}$";
+    private static final String LOWER_CASE = "abcdefghijklmnopqrstuvwxyz";
+    private static final String UPPER_CASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String DIGITS = "0123456789";
+    private static final String PUNCTUATIONS = "!@#$%^&*()-_=+[{]};:'\",<.>/?";
     public final String DB_URL = "jdbc:sqlite:usersAccount.db";
     public int userID = 0;
     public String userLevel = null;
@@ -34,6 +42,10 @@ public class User extends Account{
         this.totalCost = totalCost;
         this.userPhoneNumber = userPhoneNumber;
         this.userEmail = userEmail;
+    }
+
+    public static boolean validatePassword(String password) {
+        return password.matches(PASSWORD_PATTERN);
     }
 
     public void register(ArrayList<User> users, User user){
@@ -146,7 +158,76 @@ public class User extends Account{
             System.out.println("加载JDBC失败: " + e.getMessage());
         }
     }
+
+    public static String generatePassword(int length) {
+        StringBuilder password = new StringBuilder();
+        Random random = new Random();
+
+        // 添加至少一个小写字母
+        password.append(getRandomCharacter(LOWER_CASE, random));
+
+        // 添加至少一个大写字母
+        password.append(getRandomCharacter(UPPER_CASE, random));
+
+        // 添加至少一个数字
+        password.append(getRandomCharacter(DIGITS, random));
+
+        // 添加至少一个标点符号
+        password.append(getRandomCharacter(PUNCTUATIONS, random));
+
+        // 添加剩余字符
+        for (int i = 0; i < length - 4; i++) {
+            String characters = LOWER_CASE + UPPER_CASE + DIGITS + PUNCTUATIONS;
+            password.append(getRandomCharacter(characters, random));
+        }
+
+        // 打乱密码字符顺序
+        String shuffledPassword = shufflePassword(password.toString(), random);
+
+        return shuffledPassword;
+    }
+
+    private static char getRandomCharacter(String characters, Random random) {
+        int index = random.nextInt(characters.length());
+        return characters.charAt(index);
+    }
+
+    private static String shufflePassword(String password, Random random) {
+        StringBuilder shuffledPassword = new StringBuilder(password);
+        for (int i = shuffledPassword.length() - 1; i > 0; i--) {
+            int j = random.nextInt(i + 1);
+            char temp = shuffledPassword.charAt(i);
+            shuffledPassword.setCharAt(i, shuffledPassword.charAt(j));
+            shuffledPassword.setCharAt(j, temp);
+        }
+        return shuffledPassword.toString();
+    }
+
     public void changePassword(ArrayList<User> users, int idx, String username, String password){
+        users.get(idx).setPassword(password);
+    }
+
+    public int verification(ArrayList<User> users, User u) {
+        int idx = 0;
+        for(User user : users){
+            if(user.getUsername().equals(u.getUsername())){
+                if(user.getEmail().equals(u.getEmail())){
+                    u.setID(user.getID());
+                    return idx;
+                }else{
+                    System.out.println("邮箱与用户名绑定不一致！");
+                    return -1;
+                }
+            }
+            idx++;
+        }
+        System.out.println("用户名不存在！");
+        return -1;
+    }
+    public void resetPassword(ArrayList<User> users, int idx){
+        String password = generatePassword(9);
+        System.out.println("邮箱模拟：已经发送密码到" + users.get(idx).getEmail());
+        System.out.println("密码是：" + password);
         users.get(idx).setPassword(password);
     }
     public void logout() {

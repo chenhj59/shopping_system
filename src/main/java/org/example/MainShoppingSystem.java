@@ -374,6 +374,7 @@ public class MainShoppingSystem {
                     System.out.println("请选择操作：");
                     System.out.println("1. 注册");
                     System.out.println("2. 登录");
+                    System.out.println("3. 重置密码");
                     System.out.print("当前为用户选择操作界面，若返回上一级请按q >");
                     choice = scanner.nextLine();
                     if(choice.equals("q"))
@@ -388,16 +389,27 @@ public class MainShoppingSystem {
                         switch(choice){
                             case "1":
                                 User u = new User();
-                                System.out.print("当前为用户注册界面，若返回上一级请按q，否则按任意键继续 >");
-                                choice = scanner.nextLine();
-                                if(choice.equals("q"))
-                                {
+                                while(true){
+                                    System.out.print("当前为用户注册界面，若返回上一级请按q，否则按任意键继续 >");
+                                    choice = scanner.nextLine();
+                                    if(choice.equals("q"))
+                                    {
+                                        break;
+                                    }
+                                    System.out.println("请输入用户名（要求不少于5个字符）：");
+                                    u.setUsername(scanner.nextLine());
+                                    if(u.getUsername().length() < 5){
+                                        System.out.println("输入用户名格式错误，请重新输入！");
+                                        continue;
+                                    }
+                                    System.out.println("请输入密码（要求大于8个字符，且必须是大小写字母、数字和标点符合的组合）：");
+                                    u.setPassword(scanner.nextLine());
+                                    if(!User.validatePassword(u.getPassword())){
+                                        System.out.println("输入密码格式错误，请重新输入！");
+                                        continue;
+                                    }
                                     break;
                                 }
-                                System.out.println("请输入用户名：");
-                                u.setUsername(scanner.nextLine());
-                                System.out.println("请输入密码：");
-                                u.setPassword(scanner.nextLine());
                                 System.out.println("请输入手机号：");
                                 u.setPhoneNumber(scanner.nextLine());
                                 System.out.println("请输入邮箱：");
@@ -548,7 +560,28 @@ public class MainShoppingSystem {
                                     }
                                 } 
                             } 
-                            break; 
+                            break;
+                            case "3":
+                            while(true){
+                                System.out.print("当前为用户重置密码界面，若返回上一级请按q，否则按任意键继续 >");
+                                choice = scanner.nextLine();
+                                if(choice.equals("q"))
+                                {
+                                    break;
+                                }else if(choice.equals("exit")){
+                                    isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                                }
+                                System.out.print("请给出用户名：");
+                                user.setUsername(scanner.nextLine());
+                                System.out.print("请给出用户名注册时绑定的邮箱：");
+                                user.setEmail(scanner.nextLine());
+                                int userIdx = user.verification(users, user);
+                                if(userIdx == -1){
+                                    continue;
+                                }
+                                user.resetPassword(users, userIdx);
+                                break;
+                            }
                             case "q":
                                 isReturn = 1;
                                 break;
