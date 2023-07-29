@@ -410,6 +410,7 @@ public class MainShoppingSystem {
                                     }
                                     break;
                                 }
+                                u.setPassword(MD5Encryption.encrypt(u.getPassword()));
                                 System.out.println("请输入手机号：");
                                 u.setPhoneNumber(scanner.nextLine());
                                 System.out.println("请输入邮箱：");
@@ -438,6 +439,7 @@ public class MainShoppingSystem {
                                 username = scanner.nextLine();
                                 System.out.println("请输入用户密码：");
                                 password = scanner.nextLine();
+                                password = MD5Encryption.encrypt(password);
                                 int userIdx = user.login(users, user, username, password);
                                 if (userIdx != -1) {               
                                     while (true) {
@@ -541,6 +543,7 @@ public class MainShoppingSystem {
                                                         System.out.println("密码格式错误，请重新输入！");
                                                         continue;
                                                     }
+                                                    newPassword = MD5Encryption.encrypt(newPassword);
                                                     user.changePassword(users, userIdx, username, newPassword);
                                                     break;
                                                 }

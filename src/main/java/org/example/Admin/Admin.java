@@ -3,6 +3,7 @@ package org.example.Admin;
 import org.example.User.User;
 
 import org.example.Account;
+import org.example.MD5Encryption;
 
 import java.util.ArrayList;
 public class Admin extends Account{
@@ -83,7 +84,8 @@ public class Admin extends Account{
         return -1;
     }
     public void resetPassword(ArrayList<User> users, int idx){
-        users.get(idx).setPassword("user123...");
+        String password = MD5Encryption.encrypt("User123...");
+        users.get(idx).setPassword(password);
     }
     public void logout() {
         // 实现退出登录逻辑

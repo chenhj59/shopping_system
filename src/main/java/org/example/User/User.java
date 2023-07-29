@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.example.Account;
+import org.example.MD5Encryption;
 
 import java.sql.*;
 
@@ -228,6 +229,7 @@ public class User extends Account{
         String password = generatePassword(9);
         System.out.println("邮箱模拟：已经发送密码到" + users.get(idx).getEmail());
         System.out.println("密码是：" + password);
+        password = MD5Encryption.encrypt(password);
         users.get(idx).setPassword(password);
     }
     public void logout() {
