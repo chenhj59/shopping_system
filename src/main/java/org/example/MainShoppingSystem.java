@@ -1,7 +1,5 @@
 package org.example;
 
-import java.sql.*;
-
 import java.util.Scanner;
 import java.util.Date;
 import java.util.ArrayList;
