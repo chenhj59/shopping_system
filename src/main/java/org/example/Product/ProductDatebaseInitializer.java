@@ -3,7 +3,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import org.example.DatebaseInitializer;
-public class ProductDatebaseInitializer implements DatebaseInitializer{
+public class ProductDatebaseInitializer implements DatebaseInitializer<Product>{
     private static final String DB_URL = "jdbc:sqlite:products.db";
 
     public void initializeDatabase() {

@@ -5,7 +5,7 @@ import java.sql.*;
 
 import java.util.ArrayList;
 
-public class AdminDatebaseInitializer implements DatebaseInitializer{
+public class AdminDatebaseInitializer implements DatebaseInitializer<Admin>{
     private static final String DB_URL = "jdbc:sqlite:admins.db";
 
     public void initializeDatabase() {

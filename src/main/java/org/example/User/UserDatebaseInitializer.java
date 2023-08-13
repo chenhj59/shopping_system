@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.example.DatebaseInitializer;
 
-public class UserDatebaseInitializer implements DatebaseInitializer{
+public class UserDatebaseInitializer implements DatebaseInitializer<User>{
 	private static final String DB_URL = "jdbc:sqlite:users.db";
 
     @Override
@@ -51,7 +51,10 @@ public class UserDatebaseInitializer implements DatebaseInitializer{
             System.out.println("加载JDBC失败: " + e.getMessage());
         }
     }
+    @Override
+    public void read(ArrayList<User> users){
 
+    }
     public void read(ArrayList<User> users, ArrayList<CartItem> cartItems, ArrayList<PurchaseItem> purchaseItems)
     {
         try(Connection connection = DriverManager.getConnection(DB_URL)){
@@ -82,6 +85,10 @@ public class UserDatebaseInitializer implements DatebaseInitializer{
         }
     }
 
+    @Override
+    public void write(ArrayList<User> users){
+
+    }
     public void write(ArrayList<User> users, ArrayList<CartItem> cartItems, ArrayList<PurchaseItem> purchaseItems){
         Connection connection = null;
         PreparedStatement statement = null;

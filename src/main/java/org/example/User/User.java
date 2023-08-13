@@ -2,7 +2,6 @@ package org.example.User;
 
 import java.util.Random;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.example.Account;
 import org.example.MD5Encryption;
