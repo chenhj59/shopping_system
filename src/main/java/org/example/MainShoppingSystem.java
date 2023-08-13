@@ -1,22 +1,25 @@
 package org.example;
 
 import java.util.Scanner;
+
+import javax.xml.datatype.DatatypeFactory;
+
 import java.util.Date;
 import java.util.ArrayList;
 
 import java.text.SimpleDateFormat;
 
 import org.example.Admin.Admin;
-import org.example.Admin.AdminDatebaseInitializer;
+import org.example.Admin.AdminDatabaseStorage;
 import org.example.Admin.AdminProductManager;
 import org.example.Admin.AdminUserManager;
 import org.example.Product.Product;
-import org.example.Product.ProductDatebaseInitializer;
+import org.example.Product.ProductDatabaseStorage;
 import org.example.Product.ProductQueryParams;
 import org.example.User.CartItem;
 import org.example.User.PurchaseItem;
 import org.example.User.User;
-import org.example.User.UserDatebaseInitializer;
+import org.example.User.UserDatabaseStorage;
 import org.example.User.UserQueryParams;
 import org.example.User.UserShoppingAction;
 
@@ -28,17 +31,17 @@ public class MainShoppingSystem {
         ArrayList<CartItem> cartItems = new ArrayList<CartItem>();
         ArrayList<PurchaseItem> purchaseItems = new ArrayList<PurchaseItem>();
 
-        UserDatebaseInitializer userDatebaseInitializer = new UserDatebaseInitializer();
+        UserDatabaseStorage userDatebaseInitializer = new UserDatabaseStorage();
         userDatebaseInitializer.initializeDatabase();
         userDatebaseInitializer.read(users, cartItems, purchaseItems);
 
-        AdminDatebaseInitializer adminDatebaseInitializer = new AdminDatebaseInitializer();
-        adminDatebaseInitializer.initializeDatabase();
-        adminDatebaseInitializer.read(admins);
+        DataStorage adminDataStorage = DataStorageFactory.createAdminDataStorage("Database");
+        adminDataStorage.initializeDatabase();
+        adminDataStorage.read(admins);
 
-        ProductDatebaseInitializer productDateInitializer = new ProductDatebaseInitializer();
-        productDateInitializer.initializeDatabase();
-        productDateInitializer.read(products);
+        DataStorage productDataStorage = DataStorageFactory.createProductDataStorage("Database");
+        productDataStorage.initializeDatabase();
+        productDataStorage.read(products);
 
         Admin admin = new Admin();
         AdminUserManager adminUserManager = new AdminUserManager();
@@ -72,7 +75,7 @@ public class MainShoppingSystem {
                     {
                         break;
                     }else if(choice.equals("exit")){
-                        isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                        isExit(productDataStorage, userDatebaseInitializer, adminDataStorage, products, users, cartItems, purchaseItems, admins);
                     }
                     System.out.println("请输入管理员用户名：");
                     adminname = scanner.nextLine();
@@ -126,7 +129,7 @@ public class MainShoppingSystem {
                                                 isReturn = 1;
                                                 break;
                                             case "exit":
-                                                isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                                                isExit(productDataStorage, userDatebaseInitializer, adminDataStorage, products, users, cartItems, purchaseItems, admins);
                                                 break;
                                             default:
                                                 System.out.println("无效的选择！");
@@ -274,7 +277,7 @@ public class MainShoppingSystem {
                                                 isReturn = 1;
                                                 break;
                                             case "exit":
-                                                isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                                                isExit(productDataStorage, userDatebaseInitializer, adminDataStorage, products, users, cartItems, purchaseItems, admins);
                                                 break;
                                             default:
                                                 System.out.println("无效的选择！");
@@ -298,7 +301,7 @@ public class MainShoppingSystem {
                                             {
                                                 break;
                                             }else if(choice.equals("exit")){
-                                                isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                                                isExit(productDataStorage, userDatebaseInitializer, adminDataStorage, products, users, cartItems, purchaseItems, admins);
                                             }
                                             switch(choice){
                                                 case "1":
@@ -308,7 +311,7 @@ public class MainShoppingSystem {
                                                     {
                                                         break;
                                                     }else if(choice.equals("exit")){
-                                                        isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                                                        isExit(productDataStorage, userDatebaseInitializer, adminDataStorage, products, users, cartItems, purchaseItems, admins);
                                                     }
                                                     System.out.println("请输入新密码：");
                                                     String newPassword = scanner.nextLine();
@@ -321,7 +324,7 @@ public class MainShoppingSystem {
                                                     {
                                                         break;
                                                     }else if(choice.equals("exit")){
-                                                        isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                                                        isExit(productDataStorage, userDatebaseInitializer, adminDataStorage, products, users, cartItems, purchaseItems, admins);
                                                     }
                                                     System.out.println("请输入要重置密码的用户名：");
                                                     String username  = scanner.nextLine();
@@ -332,7 +335,7 @@ public class MainShoppingSystem {
                                                     isReturn = 1;
                                                     break;
                                                 case "exit":
-                                                    isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                                                    isExit(productDataStorage, userDatebaseInitializer, adminDataStorage, products, users, cartItems, purchaseItems, admins);
                                                     break;
                                                 default:
                                                     System.out.println("无效的选择！");
@@ -353,7 +356,7 @@ public class MainShoppingSystem {
                                         isReturn = 1;
                                         break;
                                     case "exit":
-                                        isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                                        isExit(productDataStorage, userDatebaseInitializer, adminDataStorage, products, users, cartItems, purchaseItems, admins);
                                         break;
                                     default:
                                         System.out.println("无效的选择！");
@@ -379,7 +382,7 @@ public class MainShoppingSystem {
                     {
                         break;
                     }else if(choice.equals("exit")){
-                        isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                        isExit(productDataStorage, userDatebaseInitializer, adminDataStorage, products, users, cartItems, purchaseItems, admins);
                     }
                     String password="";
                     String username="";              
@@ -431,7 +434,7 @@ public class MainShoppingSystem {
                                 {
                                     break;
                                 }else if(choice.equals("exit")){
-                                    isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                                    isExit(productDataStorage, userDatebaseInitializer, adminDataStorage, products, users, cartItems, purchaseItems, admins);
                                 }
                                 System.out.println("请输入用户名：");
                                 username = scanner.nextLine();
@@ -514,7 +517,7 @@ public class MainShoppingSystem {
                                                         isReturn = 1;
                                                         break;
                                                     case "exit":
-                                                        isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                                                        isExit(productDataStorage, userDatebaseInitializer, adminDataStorage, products, users, cartItems, purchaseItems, admins);
                                                         break;
                                                     default:
                                                         System.out.println("无效的选择！");
@@ -554,7 +557,7 @@ public class MainShoppingSystem {
                                                 isReturn = 1;
                                                 break;
                                             case "exit":
-                                            isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                                            isExit(productDataStorage, userDatebaseInitializer, adminDataStorage, products, users, cartItems, purchaseItems, admins);
                                                 break;
                                             default:
                                                 System.out.println("无效的选择！");
@@ -577,7 +580,7 @@ public class MainShoppingSystem {
                                 {
                                     break;
                                 }else if(choice.equals("exit")){
-                                    isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                                    isExit(productDataStorage, userDatebaseInitializer, adminDataStorage, products, users, cartItems, purchaseItems, admins);
                                 }
                                 System.out.print("请给出用户名：");
                                 user.setUsername(scanner.nextLine());
@@ -605,22 +608,22 @@ public class MainShoppingSystem {
                         }  
                     }
                 } else if(role.equals("exit")){
-                    isExit(productDateInitializer, userDatebaseInitializer, adminDatebaseInitializer, products, users, cartItems, purchaseItems, admins);
+                    isExit(productDataStorage, userDatebaseInitializer, adminDataStorage, products, users, cartItems, purchaseItems, admins);
                 }else {
                     System.out.println("无效的角色选择！");
                     break;
                 }
             }
-            adminDatebaseInitializer.write(admins);
+            adminDataStorage.write(admins);
             userDatebaseInitializer.write(users, cartItems, purchaseItems);
-            productDateInitializer.write(products);
+            productDataStorage.write(products);
         }
         
     }
-    public static void isExit(ProductDatebaseInitializer productDateInitializer, UserDatebaseInitializer userDatebaseInitializer,AdminDatebaseInitializer adminDatebaseInitializer,  ArrayList<Product> products, ArrayList<User> users, ArrayList<CartItem> cartItems, ArrayList<PurchaseItem> purchaseItems, ArrayList<Admin> admins){
+    public static void isExit(DataStorage productDataStorage, UserDatabaseStorage userDatebaseInitializer,DataStorage adminDataStorage,  ArrayList<Product> products, ArrayList<User> users, ArrayList<CartItem> cartItems, ArrayList<PurchaseItem> purchaseItems, ArrayList<Admin> admins){
         userDatebaseInitializer.write(users, cartItems, purchaseItems);
-        adminDatebaseInitializer.write(admins);
-        productDateInitializer.write(products);
+        adminDataStorage.write(admins);
+        productDataStorage.write(products);
         System.exit(-1);
     }
 }

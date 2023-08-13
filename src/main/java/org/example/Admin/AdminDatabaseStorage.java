@@ -1,11 +1,11 @@
 package org.example.Admin;
-import org.example.DatebaseInitializer;
+import org.example.DataStorage;
 
 import java.sql.*;
 
 import java.util.ArrayList;
 
-public class AdminDatebaseInitializer implements DatebaseInitializer<Admin>{
+public class AdminDatabaseStorage implements DataStorage<Admin>{
     private static final String DB_URL = "jdbc:sqlite:admins.db";
 
     public void initializeDatabase() {

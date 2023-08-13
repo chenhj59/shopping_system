@@ -2,9 +2,9 @@ package org.example.User;
 import java.sql.*;
 import java.util.ArrayList;
 
-import org.example.DatebaseInitializer;
+import org.example.DataStorage;
 
-public class UserDatebaseInitializer implements DatebaseInitializer<User>{
+public class UserDatabaseStorage implements DataStorage<User>{
 	private static final String DB_URL = "jdbc:sqlite:users.db";
 
     @Override

@@ -2,8 +2,8 @@ package org.example.Product;
 import java.sql.*;
 import java.util.ArrayList;
 
-import org.example.DatebaseInitializer;
-public class ProductDatebaseInitializer implements DatebaseInitializer<Product>{
+import org.example.DataStorage;
+public class ProductDatabaseStorage implements DataStorage<Product>{
     private static final String DB_URL = "jdbc:sqlite:products.db";
 
     public void initializeDatabase() {

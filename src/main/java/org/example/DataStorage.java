@@ -2,9 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 
-import org.example.User.User;
-
-public interface DatebaseInitializer<T> {
+public interface DataStorage<T> {
     //初始化数据库(储存介质)
     public void initializeDatabase();
 
