@@ -5,7 +5,7 @@ import org.example.Product.*;
 import org.example.User.*;
 
 public class DataStorageFactory {
-    public static DataStorage createAdminDataStorage(String storageType) {
+    public static DataStorage<Admin> createAdminDataStorage(String storageType) {
         if (storageType.equalsIgnoreCase("TextFile")) {
             return new AdminTextFileStorage();
         } else if (storageType.equalsIgnoreCase("Excel")) {
@@ -15,7 +15,7 @@ public class DataStorageFactory {
         }
         return null;
     }
-    public static DataStorage createProductDataStorage(String storageType) {
+    public static DataStorage<Product> createProductDataStorage(String storageType) {
         if (storageType.equalsIgnoreCase("TextFile")) {
             return new ProductTextFileStorage();
         } else if (storageType.equalsIgnoreCase("Excel")) {
@@ -25,7 +25,7 @@ public class DataStorageFactory {
         }
         return null;
     }
-    public static DataStorage createUserDataStorage(String storageType) {
+    public static UserStorageAdapter<User> createUserDataStorage(String storageType) {
         if (storageType.equalsIgnoreCase("TextFile")) {
             return new UserTextFileStorage();
         } else if (storageType.equalsIgnoreCase("Excel")) {

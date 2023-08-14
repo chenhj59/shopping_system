@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.example.DataStorage;
 
-public class UserDatabaseStorage implements DataStorage<User>{
+public class UserDatabaseStorage implements UserStorageAdapter<User>{
 	private static final String DB_URL = "jdbc:sqlite:users.db";
 
     @Override
@@ -89,6 +89,7 @@ public class UserDatabaseStorage implements DataStorage<User>{
     public void write(ArrayList<User> users){
 
     }
+    @Override
     public void write(ArrayList<User> users, ArrayList<CartItem> cartItems, ArrayList<PurchaseItem> purchaseItems){
         Connection connection = null;
         PreparedStatement statement = null;

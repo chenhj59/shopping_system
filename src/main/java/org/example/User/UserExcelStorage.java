@@ -7,7 +7,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 
 import java.io.*;
-public class UserExcelStorage implements DataStorage<User>{
+public class UserExcelStorage implements UserStorageAdapter<User>{
     private static final String fileName = "userData.xlsx";
     @Override
     public void initializeDatabase() {

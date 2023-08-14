@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import org.example.DataStorage;
 
 import java.io.*;
-public class UserTextFileStorage implements DataStorage<User>{
+public class UserTextFileStorage implements UserStorageAdapter<User>{
     @Override
     public void initializeDatabase() {
         File file = new File("usersAccount.txt");
