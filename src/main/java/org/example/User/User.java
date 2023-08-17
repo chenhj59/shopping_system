@@ -8,7 +8,7 @@ import org.example.MD5Encryption;
 
 import java.sql.*;
 
-public class User extends Account{
+public class User extends Account<User>{
     // 正则表达式，验证密码是否符合格式
     private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()-_=+[{]};:'\",<.>/?])[a-zA-Z\\d!@#$%^&*()-_=+[{]};:'\",<.>/?]{8,}$";
     private static final String LOWER_CASE = "abcdefghijklmnopqrstuvwxyz";
@@ -136,27 +136,6 @@ public class User extends Account{
 
     public void setEmail(String email) {
         this.userEmail = email;
-    }
-
-    public void changePassword(String username, String newPassword) {
-        try{
-            Class.forName("org.sqlite.JDBC");
-            Connection conn = DriverManager.getConnection(DB_URL);
-            PreparedStatement prep = conn.prepareStatement("UPDATE usersAccount SET password=? WHERE username=?");
-            prep.setString(1, username);
-            prep.setString(2, newPassword);
-
-            int rowsUpdated = prep.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("修改成功！");
-            } else {
-                System.out.println("修改失败！");
-            }
-        }catch (SQLException e) {
-            System.out.println("初始化数据库失败: " + e.getMessage());
-        } catch(ClassNotFoundException e){
-            System.out.println("加载JDBC失败: " + e.getMessage());
-        }
     }
 
     public static String generatePassword(int length) {
