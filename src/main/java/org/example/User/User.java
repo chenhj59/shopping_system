@@ -49,11 +49,6 @@ public class User extends Account<User>{
         users.add(user);
     }
 
-    @Override
-    public boolean login(String username, String password) {
-        return true;
-        }
-
     public int login(ArrayList<User> users, User u, String username, String password) {
         int idx = 0;
         for(User user : users){

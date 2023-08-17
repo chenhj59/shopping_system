@@ -33,14 +33,6 @@ public class Admin extends Account<Admin>{
     public String getPassword(){
         return adminPassword;
     }
-    
-    public boolean login(String username, String password) {
-        // 验证管理员用户名和密码的正确性
-        if ("admin".equals(username) && "admin123".equals(password)) {
-            return true; // 登录成功返回true
-        }
-        return false; // 登录失败返回false
-    }
 
     public int login(ArrayList<Admin> admins, Admin a, String name, String password) {
         int idx = 0;

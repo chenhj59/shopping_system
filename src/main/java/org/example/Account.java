@@ -16,7 +16,7 @@ public abstract class Account<T> {
 
     public abstract void resetPassword(ArrayList<User> users, int idx);
 
-    public abstract boolean login(String username, String password);
+    public abstract int login(ArrayList<T> lists, T list, String username, String password);
 
     public abstract void logout();
 }
