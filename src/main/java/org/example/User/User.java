@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import org.example.Account;
 import org.example.MD5Encryption;
 
-import java.sql.*;
-
 public class User extends Account<User>{
     // 正则表达式，验证密码是否符合格式
     private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()-_=+[{]};:'\",<.>/?])[a-zA-Z\\d!@#$%^&*()-_=+[{]};:'\",<.>/?]{8,}$";
@@ -15,7 +13,6 @@ public class User extends Account<User>{
     private static final String UPPER_CASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String DIGITS = "0123456789";
     private static final String PUNCTUATIONS = "!@#$%^&*()-_=+[{]};:'\",<.>/?";
-    public final String DB_URL = "jdbc:sqlite:usersAccount.db";
     public int userID = 0;
     public String userLevel = null;
     public String registerTime = null;
