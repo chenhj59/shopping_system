@@ -8,7 +8,7 @@ import org.example.MD5Encryption;
 
 import java.sql.*;
 
-public class User extends Account{
+public class User extends Account<User>{
     // 正则表达式，验证密码是否符合格式
     private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()-_=+[{]};:'\",<.>/?])[a-zA-Z\\d!@#$%^&*()-_=+[{]};:'\",<.>/?]{8,}$";
     private static final String LOWER_CASE = "abcdefghijklmnopqrstuvwxyz";
@@ -51,11 +51,6 @@ public class User extends Account{
     public void register(ArrayList<User> users, User user){
         users.add(user);
     }
-
-    @Override
-    public boolean login(String username, String password) {
-        return true;
-        }
 
     public int login(ArrayList<User> users, User u, String username, String password) {
         int idx = 0;

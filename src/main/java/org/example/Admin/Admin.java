@@ -6,7 +6,7 @@ import org.example.Account;
 import org.example.MD5Encryption;
 
 import java.util.ArrayList;
-public class Admin extends Account{
+public class Admin extends Account<Admin>{
     String adminname = null;
     String adminPassword = null;
 
@@ -65,11 +65,6 @@ public class Admin extends Account{
         this.username = username;
     }
 
-    @Override
-    public void changePassword(String username, String newPassword) {
-        // 实现密码管理逻辑，修改管理员密码
-        this.password = newPassword;
-    }
     public void changePassword(ArrayList<Admin> admins, int idx, String username, String password){
         admins.get(idx).setPassword(password);
     }
