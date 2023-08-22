@@ -1,8 +1,6 @@
 package org.example.Admin;
 import org.example.DatebaseInitializer;
 
-import java.sql.*;
-
 import java.util.ArrayList;
 
 import java.io.*;

@@ -1,5 +1,4 @@
 package org.example.Product;
-import java.sql.*;
 import java.util.ArrayList;
 
 import org.example.DatebaseInitializer;

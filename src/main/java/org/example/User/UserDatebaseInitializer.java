@@ -1,5 +1,4 @@
 package org.example.User;
-import java.sql.*;
 import java.util.ArrayList;
 
 import org.example.DatebaseInitializer;
