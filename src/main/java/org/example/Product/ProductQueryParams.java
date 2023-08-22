@@ -4,19 +4,23 @@ import org.example.QueryParams;
 
 public class ProductQueryParams extends QueryParams{
     private String manu;
-    private double retPrice;
+    private double retPriceLower;
+    private double retPriceUpper;
     // getter 和 setter 方法
 
     public boolean hasName() {
-        return name != null;
+        return name.equals("");
     }
 
     public boolean hasManu() {
-        return manu != null;
+        return manu.equals("");
     }
 
-    public boolean hasRetPrice() {
-        return retPrice != 0.0;
+    public boolean hasRetPriceLower() {
+        return retPriceLower == -1.0;
+    }
+    public boolean hasRetPriceUpper() {
+        return retPriceUpper == -1.0;
     }
 
     public void setName(String name){
@@ -27,8 +31,11 @@ public class ProductQueryParams extends QueryParams{
         this.manu = manu;
     }
 
-    public void setRetPrice(double price){
-        this.retPrice = price;
+    public void setRetPriceLower(double price){
+        this.retPriceLower = price;
+    }
+    public void setRetPriceUpper(double price){
+        this.retPriceUpper = price;
     }
 
     public String getName(){
@@ -39,8 +46,11 @@ public class ProductQueryParams extends QueryParams{
         return manu;
     }
 
-    public double getRetPrice(){
-        return retPrice;
+    public double getRetPriceLower(){
+        return retPriceLower;
+    }
+    public double getRetPriceUpper(){
+        return retPriceUpper;
     }
 }
 
