@@ -258,9 +258,18 @@ public class MainShoppingSystem {
                                                 System.out.print("请给出要查询的商品的生产厂家：");
                                                 queryParams.setManu(scanner.nextLine());
                                                 while(true){
-                                                    System.out.print("请给出要查询的商品的零售价格：");
+                                                    System.out.print("请给出要查询的商品的零售价格区间下界：");
                                                     try {
-                                                        queryParams.setRetPrice(Double.parseDouble(scanner.nextLine()));
+                                                        queryParams.setRetPriceLower(Double.parseDouble(scanner.nextLine()));
+                                                        break;
+                                                    } catch (NumberFormatException e) {
+                                                        System.out.println("输入无效，请输入一个有效的数字。");
+                                                    }
+                                                }
+                                                while(true){
+                                                    System.out.print("请给出要查询的商品的零售价格区间上界：");
+                                                    try {
+                                                        queryParams.setRetPriceUpper(Double.parseDouble(scanner.nextLine()));
                                                         break;
                                                     } catch (NumberFormatException e) {
                                                         System.out.println("输入无效，请输入一个有效的数字。");

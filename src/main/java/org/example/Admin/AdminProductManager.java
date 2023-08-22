@@ -66,9 +66,10 @@ public class AdminProductManager {
         List<Product> results = new ArrayList<Product>();
 
         results = products.stream()
-                .filter(product -> !queryParams.hasName() || product.getName().equals(queryParams.getName()))
-                .filter(product -> !queryParams.hasManu() || product.getManufacturer().equals(queryParams.getManu()))
-                .filter(product -> !queryParams.hasRetPrice() || product.getRetailPrice() == queryParams.getRetPrice())
+        .filter(product -> queryParams.hasName() || product.getName().equals(queryParams.getName()))
+        .filter(product -> queryParams.hasManu() || product.getManufacturer().equals(queryParams.getManu()))
+        .filter(product -> queryParams.hasRetPriceLower() || product.getRetailPrice() >= queryParams.getRetPriceLower())
+        .filter(product -> queryParams.hasRetPriceUpper() || product.getRetailPrice() <= queryParams.getRetPriceUpper())
                 .collect(Collectors.toList());
         for(Product product : results){
             System.out.print("商品编号：" + product.getID() + " ");
